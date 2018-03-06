@@ -1,0 +1,22 @@
+Frauber's / Skelux' Level Importer way:
+0x802789FC (ROM 339FC): JAL 0x80384E04 (ROM 101B84)  to load ROM to RAM
+
+what 0x80384E04 (ROM 101B84) does: 
+Clear RAM from 0x80400000 - 0x807FFFFC with zeros
+JAL 0x80278504 (0x80402000, 0x1202000, 0x1210000) (copy ROM to RAM)
+
+
+Collision Triangles: 
+0x80383348 (ROM 1000C8) ADDIU T6, R0, $7FFF instead of ADDIU T6, R0, $08FC (max number of collision triangles?)
+0x80383358 (ROM 1000D8) LUI V0, $8075 instead of JAL 0x80278120 (Allocate memory statically)
+0x80383380 (ROM 100100) LUI V0, $8066 instead of JAL 0x80278120
+
+--##-- What I'm doing --##--
+Loading 0x7CC700 - 7E0000 into RAM at 0x80400000
+(this is a bit past the beginning of 0xFF padding of the original game)
+
+0x7CC700 / 0x80400000: Modified level script command 0x17
+	Static offset list starts at 0x7CC77C / 0x8040007C
+	Offsets are as saved in the RAM bank offset list at 0x8033b400 (no prefix 0x80, e.g 0x00500000 instead of 0x80500000)
+
+Collision Triangle Patch copied

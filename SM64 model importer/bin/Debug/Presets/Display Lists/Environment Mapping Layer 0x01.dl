@@ -1,0 +1,15 @@
+Use Custom Address:= False
+ROM Pointers:= 
+RAM Pointers:= 0x19001A44
+Layer:= 0x1
+Environment Color:= 0xFFFFFFFF
+Fog Color:= 0x1
+Fog Intensity:= 0x1
+Obj File:= ""
+Blend modes:= 0xC811
+Render states:= 0x2078
+RCP bits:= 0x72000
+Combiner Low:= 0xFFFFF838
+Combiner High:= 0x127FFF
+Texture Scale X:= 0.03
+Texture Scale Y:= 0.03

@@ -1,0 +1,10 @@
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64Patcher\obj\x86\Debug\SM64Patcher.csprojResolveAssemblyReference.cache
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64Patcher\obj\x86\Debug\SM64Patcher.Main.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64Patcher\obj\x86\Debug\SM64Patcher.Properties.Resources.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64Patcher\obj\x86\Debug\SM64Patcher.csproj.GenerateResource.Cache
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64Patcher\bin\Debug\SM64Patcher.exe
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64Patcher\bin\Debug\SM64Patcher.pdb
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64Patcher\bin\Debug\SM64RAM.dll
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64Patcher\bin\Debug\SM64RAM.pdb
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64Patcher\obj\x86\Debug\SM64Patcher.exe
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64Patcher\obj\x86\Debug\SM64Patcher.pdb

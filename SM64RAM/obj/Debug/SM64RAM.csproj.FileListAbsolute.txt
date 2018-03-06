@@ -1,0 +1,10 @@
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64RAM\bin\Debug\SM64RAM.dll
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64RAM\bin\Debug\SM64RAM.pdb
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64RAM\obj\Debug\SM64RAM.csproj.GenerateResource.Cache
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64RAM\obj\Debug\SM64RAM.dll
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64RAM\obj\Debug\SM64RAM.pdb
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64RAM\obj\Debug\SM64RAM.PointerControl.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64RAM\obj\Debug\SM64RAM.RAMControl.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64RAM\obj\Debug\SM64RAM.csprojResolveAssemblyReference.cache
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64RAM\obj\Debug\SM64RAM.RemapBankDialog.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64RAM\obj\Debug\SM64RAM.SpecialPointerControl.resources

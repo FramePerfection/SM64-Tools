@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A4ADCCC1-A7C4-4359-B8FA-A425C63A4C80}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SM64_model_importer</RootNamespace>
+    <AssemblyName>SM64 model importer</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Area.cs" />
+    <Compile Include="Collision\CollisionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Collision\CollisionControl.Designer.cs">
+      <DependentUpon>CollisionControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collision\CollisionMap.cs" />
+    <Compile Include="Collision\CollisionTypeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Collision\CollisionTypeControl.Designer.cs">
+      <DependentUpon>CollisionTypeControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DisplayLists\BlenderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DisplayLists\BlenderControl.Designer.cs">
+      <DependentUpon>BlenderControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DisplayLists\ColladaImporter.cs" />
+    <Compile Include="DisplayLists\CombinerStates.cs" />
+    <Compile Include="DisplayLists\Commands.cs" />
+    <Compile Include="DisplayLists\DisplayList.cs" />
+    <Compile Include="DisplayLists\DisplayListControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DisplayLists\DisplayListControl.Designer.cs">
+      <DependentUpon>DisplayListControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DisplayLists\TextureLibrary.cs" />
+    <Compile Include="FileParser.cs" />
+    <Compile Include="GlobalsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GlobalsControl.Designer.cs">
+      <DependentUpon>GlobalsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImageConverter.cs" />
+    <Compile Include="Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DisplayLists\ObjImporter.cs" />
+    <Compile Include="DisplayLists\ParameterControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DisplayLists\ParameterControl.Designer.cs">
+      <DependentUpon>ParameterControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ObjectTabPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ObjectTabPage.Designer.cs">
+      <DependentUpon>ObjectTabPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DisplayLists\RenderStateControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DisplayLists\RenderStateControl.Designer.cs">
+      <DependentUpon>RenderStateControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DisplayLists\RenderStates.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="DisplayLists\Structs.cs" />
+    <Compile Include="DisplayLists\TextureControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DisplayLists\TextureControl.Designer.cs">
+      <DependentUpon>TextureControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DisplayLists\TextureInfo.cs" />
+    <EmbeddedResource Include="Collision\CollisionControl.resx">
+      <DependentUpon>CollisionControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Collision\CollisionTypeControl.resx">
+      <DependentUpon>CollisionTypeControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DisplayLists\BlenderControl.resx">
+      <DependentUpon>BlenderControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DisplayLists\DisplayListControl.resx">
+      <DependentUpon>DisplayListControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GlobalsControl.resx">
+      <DependentUpon>GlobalsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DisplayLists\ParameterControl.resx">
+      <DependentUpon>ParameterControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ObjectTabPage.resx">
+      <DependentUpon>ObjectTabPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="DisplayLists\RenderStateControl.resx">
+      <DependentUpon>RenderStateControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DisplayLists\TextureControl.resx">
+      <DependentUpon>TextureControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SM64RAM\SM64RAM.csproj">
+      <Project>{883ED3C0-9224-4733-817B-7EBBE2EBC01B}</Project>
+      <Name>SM64RAM</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SM64Renderer\SM64Renderer.csproj">
+      <Project>{7FB549A5-53B5-4319-8F18-C5B2A391123C}</Project>
+      <Name>SM64Renderer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

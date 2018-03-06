@@ -1,0 +1,1 @@
+Segmented Function Pointer command: 0x1013F8 -> File: Segmented BehaviourScript Command 0xC.bin

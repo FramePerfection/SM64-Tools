@@ -1,0 +1,39 @@
+0x00: Default
+0x01: Lava / Frostbite
+0x0A: Death floor 
+0x0B: Close camera 
+0x0D: Water 
+0x0E: Water (flowing)* 
+0x12: ?? Freezes game 
+0x13: Slippery 
+0x14: Slippery (slightly) 
+0x15: Anti-slippery 
+0x1B: Endless stairs check 
+0x21: Sand 
+0x22: Quicksand (lethal, slow) 
+0x23: Quicksand (lethal, instant) 
+0x24: Quicksand (non-lethal, flowing)* 
+0x26: Quicksand (non-lethal) 
+0x27: Quicksand (non-lethal, flowing)2* 
+0x28: ?? cannons, platforms, the star thing in the courtyard, warp pipe surface 
+0x29: Grass 
+0x2A: ?? hill with the red coing in BoB? 
+0x2C: Windy* 
+0x2D: Quicksand (lethal, flowing)* 
+0x2E: Slippery (ice) 
+0x2F: Wing cap level entrance 
+0x30: Hard floor 
+0x32: Kill mario? 
+0x33: Timer start 
+0x34: Timer stop 
+0x35: Grass? 
+0x36: Grass slippery? 
+0x37: Hard floor anti-slippery 
+0x38: Flying windy 
+0x65: Far camera (King Bobomb's platform) 
+0x6F: ? wooden bridge in bowser level 
+0x70: ? grass next to rolling balls in bob 
+0x75: Slippery 
+0x76: ? Orange boxes, tick tock clock floor, crystals, things in mirror room, whomps 
+0x79: Close camera 
+0x7A: ? Dorrie's back, purple buttons 

@@ -1,0 +1,15 @@
+Use Custom Address:= False
+ROM Pointers:= 
+RAM Pointers:= 0x1900106C
+Layer:= 0x5
+Environment Color:= 0xFFFFFFFF
+Fog Color:= 0x1
+Fog Intensity:= 0x1
+Obj File:= "C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 model importer\SM64 model importer\bin\Debug\_Development Data\demo level transition.obj"
+Blend modes:= 0xC810
+Render states:= 0x78D8
+RCP bits:= 0x32000
+Combiner Low:= 0xFFFFF239
+Combiner High:= 0x12401F
+Texture Scale X:= 1
+Texture Scale Y:= 1

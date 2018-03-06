@@ -1,0 +1,7 @@
+Static Levelscript Command:
+0x339FC -> 0C 0E 13 81,
+0x108694 -> 80 40 00 00,
+0x7CC700 -> File: Static LevelScript Command 0x17.bin
+
+Static Collision Data:
+0x1000C0 -> File: More Collision Triangles.bin

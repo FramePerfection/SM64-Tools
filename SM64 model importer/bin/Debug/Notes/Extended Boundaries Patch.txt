@@ -1,0 +1,65 @@
+Observed Changes: 
+ROM 0x4924:
+BNEZ T4, $4940 -> BEQ R0, R0, $4940
+
+ROM 0x42038:
+LUI AT, $8033
+SW T2, $DF28 (AT)
+LUI AT, $8034
+SH R0, $C848 (AT)
+->
+ADDIU T0, R0, $0002
+NOP
+LUI AT, $8034
+SH T0, $C848 (AT)
+
+
+ROM 0x45614:
+NOP -> DIV.S F8, F8, F20 //Divide input coordinates by something? F20 is never defined (always 0), so this is nonsense.
+ROM 0x45630:
+NOP -> DIV.S F4, F4, F20 //Divide input coordinates by something?
+ROM 0x4564C:
+NOP -> DIV.S F16, F16, F20 //Divide input coordinates by something?
+
+
+ROM 0x4AC10:
+BNEZ V0, $4AC54 -> NOP
+
+ROM 0x5D5C0:
+BEQ V0, R0, $5D62C -> NOP
+
+
+ROM 0x81DAC:
+LUI AT, $4000 -> LUI AT, $3FBF //likely floats, but why change 2.0 to 1.4921875 ???
+
+
+ROM 0x88B5C:
+BEQ R0, R0, $88B6C
+DIV.S F0, F16, F8
+BEQ R0, R0, $88B6C
+NOP
+->
+DIV.S F0, F16, F8
+ADD.S F8, F8, F8
+NOP
+ADD.S F0, F0, F8
+
+
+ROM 0xFD420 (- ~0xFD484 changed) ASM
+                                 ASM
+ROM 0xFDAD0 (- ~0xFDb00 changed) ASM
+                                 ASM
+ROM 0xFDC30 (- ~0xFDC90 changed) ASM
+                                 ASM
+ROM 0xFDF70 (- ~0xFE090 changed) ASM
+                                 ASM
+ROM 0xFE270 (- ~0xFE2DC changed) ASM
+                                 ASM
+ROM 0xFE4A0 (- ~0xFE4DC changed) ASM
+                                 ASM
+ROM 0xFE6BC (- ~0xFE72C changed) ASM
+                                 ASM
+ROM 0xFFA28 (- ~0xFFAE0 changed) ASM
+
+ROM 0x12A787: 0x63 -> 0x01
+ROM 0x12A789: 0xB4 -> 0x96
