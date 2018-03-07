@@ -42,6 +42,7 @@
     <Compile Include="EmulationState.cs" />
     <Compile Include="GeoLayoutReader.cs" />
     <Compile Include="LevelScriptReader.cs" />
+    <Compile Include="MessageStream.cs" />
     <Compile Include="MIO0.cs" />
     <Compile Include="PatchEngine.cs" />
     <Compile Include="PointerControl.cs">

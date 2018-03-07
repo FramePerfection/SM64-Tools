@@ -16,6 +16,7 @@ namespace SM64LevelEditor
     public partial class Main : Form
     {
         ToolBox toolBox;
+        LogWindow logWindow;
 
         public DeviceWrapper device;
         TextureManager globalTextures;
@@ -34,6 +35,9 @@ namespace SM64LevelEditor
 
         public Main()
         {
+            //Makes form closing faster
+            FormClosing += (_, __) => System.Diagnostics.Process.GetCurrentProcess().Kill();
+
             instance = this;
             InitializeComponent();
             Level.InitCommands();
@@ -106,6 +110,9 @@ namespace SM64LevelEditor
 
             toolBox = new ToolBox(this);
             toolBox.Show();
+
+            logWindow = new LogWindow();
+            EmulationState.messages = logWindow;
 
             openToolStripMenuItem_Click(null, null);
 
@@ -197,6 +204,29 @@ namespace SM64LevelEditor
             sfd.Filter = "*.obj|*.obj";
             if (sfd.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
             Editor.currentArea.geometry.Export(sfd.FileName);
+        }
+
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EmulationState.messages.AppendMessage("Not implemented", "Error");
+        }
+
+        private void toolBoxToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toolBoxToolStripMenuItem.Checked = !toolBoxToolStripMenuItem.Checked;
+            if (toolBoxToolStripMenuItem.Checked)
+                toolBox.Show();
+            else
+                toolBox.Hide();
+        }
+
+        private void historyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            logToolStripMenuItem.Checked = !logToolStripMenuItem.Checked;
+            if (logToolStripMenuItem.Checked)
+                logWindow.Show();
+            else
+                logWindow.Hide();
         }
     }
 }

@@ -14,6 +14,7 @@ namespace SM64_model_importer
     public interface Importable
     {
         bool useCustomAddress { get; }
+        int PrepareForImport();
         int Import(int segmentedAddress);
     }
 
@@ -73,6 +74,21 @@ namespace SM64_model_importer
                 return;
 
             EmulationState.instance.RefreshROM();
+            int numObjects = 0;
+            foreach (TabPage page in tabImports.TabPages)
+                foreach (Control c in page.Controls[0].Controls)
+                {
+                    Importable import = c as Importable;
+                    if (import != null)
+                    {
+                        if (import.PrepareForImport() == -1)
+                        {
+                            EmulationState.messages.AppendMessage("Import failed.", "Error");
+                            return;
+                        }
+                        numObjects++;
+                    }
+                }
 
             StringBuilder log = new StringBuilder();
             int cursor = segmentedAddress;
@@ -88,18 +104,16 @@ namespace SM64_model_importer
             EmulationState.RAMBank bank = EmulationState.instance.banks[segmentedAddress >> 0x18];
             Array.Copy(bank.value, offsetInBank, EmulationState.instance.ROM, bank.ROMStart + offsetInBank, cursor - segmentedAddress);
 
-            int numObjects = 0;
             foreach (TabPage page in tabImports.TabPages)
                 foreach (Control c in page.Controls[0].Controls)
                 {
                     Importable import = c as Importable;
                     if (import != null)
                     {
-                        numObjects++;
                         int newCursor = import.Import(cursor);
                         if (newCursor == -1)
                         {
-                            MessageBox.Show("Import failed.");
+                            EmulationState.messages.AppendMessage("Import failed.", "Error");
                             return;
                         }
                         else if (newCursor != 0)
@@ -107,7 +121,7 @@ namespace SM64_model_importer
                     }
                 }
             File.WriteAllBytes(EmulationState.instance.ROMName, EmulationState.instance.ROM);
-            MessageBox.Show("Imported " + numObjects + " objects.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            EmulationState.messages.AppendMessage("Imported " + numObjects + " objects.", "Info");
         }
 
         private void btnAddDisplayList_Click(object sender, EventArgs e)
@@ -228,7 +242,7 @@ namespace SM64_model_importer
             runLevelScripts.Clear();
             if (SM64RAM.EmulationState.instance.ROM == null)
             {
-                MessageBox.Show("An error occured while loading the ROM. Make sure no other programs are using the ROM file right now and try again.");
+                EmulationState.messages.AppendMessage("An error occured while loading the ROM. Make sure no other programs are using the ROM file right now and try again.");
                 return;
             }
 

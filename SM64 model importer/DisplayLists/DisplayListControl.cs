@@ -89,6 +89,19 @@ namespace SM64_model_importer
 
         #region Import Functions
 
+        public int PrepareForImport()
+        {
+            try
+            {
+                LoadObj();
+            }
+            catch
+            {
+                return -1;
+            }
+            return 0;
+        }
+
         public int Import(int segmentOffset)
         {
             this.segmentOffset = segmentOffset;
@@ -99,7 +112,7 @@ namespace SM64_model_importer
                 return -1;
             if (bank.compressed)
             {
-                MessageBox.Show("The selected bank 0x" + segment.ToString("X") + " is compressed in the ROM and can therefore not be altered.");
+                EmulationState.messages.AppendMessage("The selected bank 0x" + segment.ToString("X") + " is compressed in the ROM and can therefore not be altered.", "Error");
                 return -1;
             }
             WriteVertices();
@@ -158,7 +171,7 @@ namespace SM64_model_importer
                     if (i < messages.Length - 1)
                         lolol.Append("\n");
                 }
-                MessageBox.Show(lolol.ToString());
+                EmulationState.messages.AppendMessage(lolol.ToString(), "Info");
             }
 #if !DEBUG
             }
@@ -227,7 +240,6 @@ namespace SM64_model_importer
 
         void WriteVertices()
         {
-            ;
             foreach (Subset subset in newDsp.subsets)
             {
                 int baseMultiplierS = subset.Texture.baseMultiplierS;

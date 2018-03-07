@@ -110,8 +110,7 @@ namespace SM64RAM
                 if (cursor > endPosition) break;
                 if (cmdLen < 4)
                 {
-                    MessageBox.Show("Encountered invalid command 0x" + cmd.ToString("X") + " with length " + cmdLen.ToString() + " at 0x" + cursor.ToString("X") + "."
-                        , "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    EmulationState.messages.AppendMessage("Encountered invalid command 0x" + cmd.ToString("X") + " with length " + cmdLen.ToString() + " at 0x" + cursor.ToString("X") + ".", "Error");
                     return cmdList.ToArray();
                 }
             }
@@ -129,7 +128,7 @@ namespace SM64RAM
             foreach (int recordedJump in recordedJumps)
                 if ((recordedJump & 0xFFFFFF) == cursor && EmulationState.instance.banks[recordedJump >> 0x18].value == currentBank)
                 {
-                    MessageBox.Show("Infinite loop detected.", "Infinite loop", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    EmulationState.messages.AppendMessage("Infinite loop detected.", "Info");
                     return;
                 }
 
@@ -158,15 +157,13 @@ namespace SM64RAM
                         _continue &= ack(commandBytes);
                 else
                 {
-                    MessageBox.Show("Encountered unknown command 0x" + cmd.ToString("X") + " with length " + cmdLen.ToString() + " at 0x" + cursor.ToString("X") + "."
-                        , "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    EmulationState.messages.AppendMessage("Encountered unknown command 0x" + cmd.ToString("X") + " with length " + cmdLen.ToString() + " at 0x" + cursor.ToString("X") + ".", "Error");
                     return;
                 }
                 cursor += cmdLen;
                 if (cmdLen < 4)
                 {
-                    MessageBox.Show("Encountered invalid command 0x" + cmd.ToString("X") + " with length " + cmdLen.ToString() + " at 0x" + cursor.ToString("X") + "."
-                        , "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    EmulationState.messages.AppendMessage("Encountered invalid command 0x" + cmd.ToString("X") + " with length " + cmdLen.ToString() + " at 0x" + cursor.ToString("X") + ".", "Error");
                     return;
                 }
             }

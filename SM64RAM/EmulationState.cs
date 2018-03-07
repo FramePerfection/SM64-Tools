@@ -63,6 +63,7 @@ namespace SM64RAM
             }
         }
 
+        public static MessageStream messages = new MessageBoxStream();
         public static EmulationState instance = new EmulationState();
         public byte[] ROM;
         public RAMBank[] banks = new RAMBank[0x25];
@@ -81,7 +82,7 @@ namespace SM64RAM
         {
             if (ROM == null)
                 if (showError)
-                    MessageBox.Show("No ROM loaded!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    messages.AppendMessage("No ROM loaded!", "Error");
             return ROM != null;
         }
 
@@ -92,13 +93,13 @@ namespace SM64RAM
             if (segment >= banks.Length || banks[segment] == null || banks[segment].value == null)
             {
                 if (showError)
-                    MessageBox.Show(segment >= banks.Length ? "Invalid Bank!" : "Bank 0x" + segment.ToString("X") + " not loaded!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    messages.AppendMessage(segment >= banks.Length ? "Invalid Bank!" : "Bank 0x" + segment.ToString("X") + " not loaded!", "Error");
                 return false;
             }
             if ((value & 0xFFFFFF) > banks[segment].value.Length - length)
             {
                 if (showError)
-                    MessageBox.Show("Bank 0x" + segment.ToString("X") + " is too short.\nBank length was " + banks[segment].value.Length + ", but requested length was " + (value + length).ToString("X") + ".", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    messages.AppendMessage("Bank 0x" + segment.ToString("X") + " is too short.\nBank length was " + banks[segment].value.Length + ", but requested length was " + (value + length).ToString("X") + ".", "Error");
                 return false;
             }
             return true;
@@ -111,7 +112,7 @@ namespace SM64RAM
             if (banks[segment].compressed)
             {
                 if (showError)
-                    MessageBox.Show("Bank 0x" + segment + " is compressed and can therefore not be altered!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    messages.AppendMessage("Bank 0x" + segment + " is compressed and can therefore not be altered!", "Error");
                 return false;
             }
             return true;
@@ -143,13 +144,13 @@ namespace SM64RAM
         {
             if (bank >= banks.Length)
             {
-                MessageBox.Show("Bank 0x" + bank.ToString("X") + " is too high!", "Error");
+               messages.AppendMessage("Bank 0x" + bank.ToString("X") + " is too high!", "Error");
                 return;
             }
             if (!AssertROM()) return;
             if (ROMEnd > ROM.Length || ROMEnd < ROMStart)
             {
-                MessageBox.Show("Invalid ROM end for bank 0x" + bank + " (" + ROMStart.ToString("X") + " - " + ROMEnd.ToString("X") + ").");
+                messages.AppendMessage("Invalid ROM end for bank 0x" + bank + " (" + ROMStart.ToString("X") + " - " + ROMEnd.ToString("X") + ").", "Error");
                 return;
             }
             banks[bank] = new RAMBank(bank, ROMStart, ROMEnd, decompress);
@@ -161,7 +162,7 @@ namespace SM64RAM
             RAMBank b = banks[bank];
             if (b == null || b.compressed || b.value.Length > b.ROMEnd - b.ROMStart)
             {
-                MessageBox.Show("RAM bank 0x" + bank.ToString("X2") + " cannot be saved");
+                messages.AppendMessage("RAM bank 0x" + bank.ToString("X2") + " cannot be saved", "Error");
                 return;
             }
             Array.Copy(banks[bank].value, 0, ROM, banks[bank].ROMStart, banks[bank].value.Length);

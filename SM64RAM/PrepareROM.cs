@@ -17,7 +17,8 @@ namespace SM64RAM
             Invalid
         }
 
-        public const int SUGGESTED_ROM_SIZE = 0x4000000;
+        public const int REGULAR_ROM_SIZE = 0x1000000;
+        public const int SUGGESTED_ROM_SIZE = 0x3000000;
         const string EXPAND_ROM_MESSAGE = "Loaded ROM is not 48MB in size. To use the presets that come with this tool, it is suggested that you expand your ROM to 48MB\nAll this will do is increase the file size and add 01 padding in the new areas. Do you want to do that now?";
         public static byte[] Normalize(string inputFile)
         {
@@ -29,7 +30,7 @@ namespace SM64RAM
             if (endian == Endianness.Big_Endian)
             { BigEndianToLittleEndian(ref inputBytes); endian = Endianness.Little_Endian; }
 
-            if (inputBytes.Length < SUGGESTED_ROM_SIZE)
+            if (inputBytes.Length == REGULAR_ROM_SIZE)
             {
                if (MessageBox.Show(EXPAND_ROM_MESSAGE, "Expand ROM?", MessageBoxButtons.YesNo) != DialogResult.Yes) return inputBytes;
                 int initialSize = inputBytes.Length;

@@ -134,6 +134,7 @@ namespace SM64_model_importer
                     cursor += 2;
                     for (int i = 0; i < numObjects; i++)
                     {
+                        //Water boxes not yet implemented
                         //WaterBox asfas = new WaterBox(cvt.int16(currentBank, cursor + 2), cvt.int16(currentBank, cursor + 4), cvt.int16(currentBank, cursor + 6), cvt.int16(currentBank, cursor + 8), cvt.int16(currentBank, cursor + 10));
                         //asfas.ID = cvt.int16(currentBank, cursor);
                         cursor += 12;
@@ -223,13 +224,13 @@ namespace SM64_model_importer
                         currentPatch = new CollisionPatch(split[1]);
                     }
                 }
-                else if (split[0] == "v")
+                else if (split[0] == "v") //Vertex Position
                 {
                     Vector3 v = cvt.ParseVector3(split, 1);
                     v.X *= -1;
                     positions.Add(v * Settings.importScale);
                 }
-                else if (split[0] == "usemtl")
+                else if (split[0] == "usemtl") //Material usage declaration
                 {
                     if (mode == PatchMode.ByMaterial)
                     {

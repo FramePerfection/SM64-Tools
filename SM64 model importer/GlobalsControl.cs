@@ -38,6 +38,8 @@ namespace SM64_model_importer
             return parameterAddress[(int)parameter];
         }
 
+        public int PrepareForImport() { return 0; /*Nothing to prepare*/}
+
         public int Import(int segmentedPointer)
         {
             int bank = segmentedPointer >> 0x18;
@@ -61,7 +63,7 @@ namespace SM64_model_importer
             if (dlg.ShowDialog() != DialogResult.OK) return;
             Color c = dlg.Color;
             globalParameters[(int)RenderStates.Parameter.FogColor] = (c.R << (int)0x18) | (c.G << (int)0x10) | (c.B << (int)0x08) | c.A;
-            
+
         }
 
         public void LoadSettings(FileParser.Block block)

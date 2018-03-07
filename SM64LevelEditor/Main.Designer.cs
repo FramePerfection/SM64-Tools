@@ -37,10 +37,13 @@
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.thisLooksProToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hahahahToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.currentAreaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectedModelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.thisLooksProToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolBoxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.logToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,8 +53,8 @@
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
             this.ExportToolStripMenuItem,
-            this.thisLooksProToolStripMenuItem,
-            this.hahahahToolStripMenuItem});
+            this.viewToolStripMenuItem,
+            this.thisLooksProToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(938, 24);
@@ -118,18 +121,6 @@
             this.ExportToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.ExportToolStripMenuItem.Text = "Export";
             // 
-            // thisLooksProToolStripMenuItem
-            // 
-            this.thisLooksProToolStripMenuItem.Name = "thisLooksProToolStripMenuItem";
-            this.thisLooksProToolStripMenuItem.Size = new System.Drawing.Size(90, 20);
-            this.thisLooksProToolStripMenuItem.Text = "this looks pro";
-            // 
-            // hahahahToolStripMenuItem
-            // 
-            this.hahahahToolStripMenuItem.Name = "hahahahToolStripMenuItem";
-            this.hahahahToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
-            this.hahahahToolStripMenuItem.Text = "hahahah";
-            // 
             // currentAreaToolStripMenuItem
             // 
             this.currentAreaToolStripMenuItem.Name = "currentAreaToolStripMenuItem";
@@ -142,6 +133,46 @@
             this.selectedModelsToolStripMenuItem.Name = "selectedModelsToolStripMenuItem";
             this.selectedModelsToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.selectedModelsToolStripMenuItem.Text = "Selected Models";
+            // 
+            // thisLooksProToolStripMenuItem
+            // 
+            this.thisLooksProToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.helpToolStripMenuItem});
+            this.thisLooksProToolStripMenuItem.Name = "thisLooksProToolStripMenuItem";
+            this.thisLooksProToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.thisLooksProToolStripMenuItem.Text = "Help";
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.helpToolStripMenuItem.Text = "Controls";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolBoxToolStripMenuItem,
+            this.logToolStripMenuItem});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.viewToolStripMenuItem.Text = "View";
+            // 
+            // toolBoxToolStripMenuItem
+            // 
+            this.toolBoxToolStripMenuItem.Checked = true;
+            this.toolBoxToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolBoxToolStripMenuItem.Name = "toolBoxToolStripMenuItem";
+            this.toolBoxToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.toolBoxToolStripMenuItem.Text = "Tool Box";
+            this.toolBoxToolStripMenuItem.Click += new System.EventHandler(this.toolBoxToolStripMenuItem_Click);
+            // 
+            // logToolStripMenuItem
+            // 
+            this.logToolStripMenuItem.Name = "logToolStripMenuItem";
+            this.logToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.logToolStripMenuItem.Text = "Log";
+            this.logToolStripMenuItem.Click += new System.EventHandler(this.historyToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -166,7 +197,6 @@
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ExportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem thisLooksProToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem hahahahToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
@@ -174,6 +204,10 @@
         private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem currentAreaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectedModelsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolBoxToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem logToolStripMenuItem;
     }
 }
 

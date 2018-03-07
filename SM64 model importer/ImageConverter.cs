@@ -58,7 +58,7 @@ namespace SM64_model_importer
 
             comment = "Image is too large (" + source.Width.ToString() + " x " + source.Height.ToString() + ") and has to be resized to " + newWidth.ToString() + " x " + newHeight.ToString();
             if (newWidth * newHeight > 0x800)
-                System.Windows.Forms.MessageBox.Show("Failed to scale image down D:");
+                EmulationState.messages.AppendMessage.MessageBox.Show("Failed to scale image down D:", "This should really not happen.");
 
             Rectangle destRect = new Rectangle(0, 0, newWidth, newHeight);
             Bitmap destImage = new Bitmap(newWidth, newHeight);

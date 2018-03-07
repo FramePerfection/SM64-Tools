@@ -63,6 +63,39 @@ namespace SM64_model_importer
             LoadFile();
         }
 
+        public int PrepareForImport()
+        {
+            try
+            {
+                LoadFile();
+            }
+            catch
+            {
+                return -1;
+            }
+            return 0;
+        }
+
+        public int Import(int segmentOffset)
+        {
+            int totalSize = collision.GetLength();
+            this.segmentOffset = segmentOffset;
+            int segment = segmentOffset >> 0x18;
+            int offsetInBank = segmentOffset & 0xFFFFFF;
+            EmulationState.RAMBank bank = EmulationState.instance.banks[segment];
+            if (EmulationState.instance.AssertRead(segmentOffset, totalSize) && bank.compressed)
+            {
+                EmulationState.messages.AppendMessage("The selected bank 0x" + segment.ToString("X") + " is compressed in the ROM and can therefore not be altered.", "Error");
+                return -1;
+            }
+            collision.Write(ref bank.value, offsetInBank);
+
+            Array.Copy(bank.value, offsetInBank, EmulationState.instance.ROM, bank.ROMStart + offsetInBank, totalSize);
+            pointerControl1.WritePointers(segmentOffset);
+            specialPointerControl1.WritePointers(segmentOffset);
+            return segmentOffset + totalSize;
+        }
+
         void LoadFile()
         {
             if (sourceFileName == null) return;
@@ -94,27 +127,6 @@ namespace SM64_model_importer
             }
 #endif
         }
-
-        public int Import(int segmentOffset)
-        {
-            int totalSize = collision.GetLength();
-            this.segmentOffset = segmentOffset;
-            int segment = segmentOffset >> 0x18;
-            int offsetInBank = segmentOffset & 0xFFFFFF;
-            EmulationState.RAMBank bank = EmulationState.instance.banks[segment];
-            if (EmulationState.instance.AssertRead(segmentOffset, totalSize) && bank.compressed)
-            {
-                MessageBox.Show("The selected bank 0x" + segment.ToString("X") + " is compressed in the ROM and can therefore not be altered.");
-                return -1;
-            }
-            collision.Write(ref bank.value, offsetInBank);
-
-            Array.Copy(bank.value, offsetInBank, EmulationState.instance.ROM, bank.ROMStart + offsetInBank, totalSize);
-            pointerControl1.WritePointers(segmentOffset);
-            specialPointerControl1.WritePointers(segmentOffset);
-            return segmentOffset + totalSize;
-        }
-
         #region Save/Load Settings
 
         public void SaveSettings(FileParser.Block block)

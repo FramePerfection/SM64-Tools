@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SM64 model importer", "SM64 model importer\SM64 model importer.csproj", "{A4ADCCC1-A7C4-4359-B8FA-A425C63A4C80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SM64HackingTools", "SM64 model importer\SM64HackingTools.csproj", "{A4ADCCC1-A7C4-4359-B8FA-A425C63A4C80}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SM64Renderer", "SM64Renderer\SM64Renderer.csproj", "{7FB549A5-53B5-4319-8F18-C5B2A391123C}"
 EndProject

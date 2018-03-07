@@ -23,6 +23,7 @@ namespace SM64LevelEditor
             warpControl.WarpsChanged += () => {if (Editor.currentArea != null) {
                 Editor.currentArea.warps.Clear(); Editor.currentArea.warps.AddRange(warpControl.GetWarps());
             }};
+            FormClosing += (_, e) => { e.Cancel = true; Hide(); };
         }
 
         public void SetLevelAddresses(int[] addresses)

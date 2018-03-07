@@ -8,8 +8,8 @@
     <ProjectGuid>{A4ADCCC1-A7C4-4359-B8FA-A425C63A4C80}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SM64_model_importer</RootNamespace>
-    <AssemblyName>SM64 model importer</AssemblyName>
+    <RootNamespace>SM64HackingTools</RootNamespace>
+    <AssemblyName>SM64 Hacking Tools</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -149,6 +149,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="DisplayLists\RenderStateControl.resx">
       <DependentUpon>RenderStateControl.cs</DependentUpon>
