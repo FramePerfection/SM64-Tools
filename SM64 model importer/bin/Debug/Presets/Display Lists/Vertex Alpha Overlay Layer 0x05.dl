@@ -1,0 +1,16 @@
+Use Custom Address:= False
+ROM Pointers:= 
+RAM Pointers:= 0x1900106C
+Layer:= 0x5
+Environment Color:= 0xFFFFFFFF
+Fog Color:= 0x1
+Fog Intensity:= 0x1
+Obj File:= "C:\Users\Thomas.Sharkoon7.000\Desktop\Assorted Stuff\mupen64-rerecording-v8\74EEVEfinal.ext8\Remodel\OW 1\OW1 Lava Coverup.dae"
+Blend modes:= 0xC810
+Render states:= 0x48D8
+RCP Set:= 0x10000
+RCP Unset:= 0x0
+Combiner Low:= 0xFFFFF83C
+Combiner High:= 0x12401F
+Texture Scale X:= 1
+Texture Scale Y:= 1

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SM64RAM;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     public class Area
     {

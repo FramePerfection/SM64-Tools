@@ -1,0 +1,24 @@
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.csprojResolveAssemblyReference.cache
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.csproj.GenerateResource.Cache
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.CollisionControl.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.CollisionTypeControl.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.BlenderControl.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.DisplayListControl.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.GlobalsControl.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.Main.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.ParameterControl.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.ObjectTabPage.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.TextureControl.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\bin\Debug\SM64RAM.dll
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\bin\Debug\SM64Renderer.dll
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\bin\Debug\SM64RAM.pdb
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\bin\Debug\SM64Renderer.pdb
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.PropertyControl.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\bin\Debug\nQuant.Core.dll
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\bin\Debug\nQuant.Core.pdb
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64 Model Importer.exe
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64 Model Importer.pdb
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\bin\Debug\SM64 Model Importer.exe
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\bin\Debug\SM64 Model Importer.pdb
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.Properties.Resources.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.EnumSelectDialog.resources

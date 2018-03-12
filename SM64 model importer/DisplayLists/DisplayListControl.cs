@@ -8,19 +8,20 @@ using System.Windows.Forms;
 using System.IO;
 using SM64RAM;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     public partial class DisplayListControl : UserControl, Importable, ReadWrite
     {
         public bool useCustomAddress { get { return false; } }
-        DisplayList newDsp = new DisplayList();
+        DisplayList displayList = new DisplayList();
         int segmentOffset;
         int vertexOffset, commandOffset, totalSize;
         string sourceFileName = "";
         bool haltEvents = false;
 
         ParameterControl[] paramControls;
-        delegate void Importer(string fileName, ref DisplayList dsp, out Dictionary<string, TextureInfo> allMaterials, out string[] messages);
+        ConversionSettings conversionSettings = new ConversionSettings();
+        delegate void Importer(string fileName, ConversionSettings settings, ref DisplayList dsp, out Dictionary<string, TextureInfo> allMaterials, out string[] messages);
 
         public DisplayListControl()
         {
@@ -28,8 +29,8 @@ namespace SM64_model_importer
             blenderControl1.BlendModeChanged += (object sender, EventArgs e) =>
             {
                 if (haltEvents) return;
-                if (newDsp != null)
-                    newDsp.renderstates.blendMode = blenderControl1.GetValues();
+                if (displayList != null)
+                    displayList.renderstates.blendMode = blenderControl1.GetValues();
             };
             paramControls = new ParameterControl[] { paramColor, paramFogColor, paramFogIntensity };
             for (int k = 0; k < paramControls.Length; k++)
@@ -39,9 +40,9 @@ namespace SM64_model_importer
                 {
                     switch (paramControls[i].cmbType.SelectedIndex)
                     {
-                        case 0: newDsp.renderstates.getParameter[i] = null; break;
-                        case 1: newDsp.renderstates.getParameter[i] = GetParameterGlobal; break;
-                        case 2: newDsp.renderstates.getParameter[i] = GetParameterCustom; break;
+                        case 0: displayList.renderstates.getParameter[i] = null; break;
+                        case 1: displayList.renderstates.getParameter[i] = GetParameterGlobal; break;
+                        case 2: displayList.renderstates.getParameter[i] = GetParameterCustom; break;
                     }
                 };
             }
@@ -56,8 +57,14 @@ namespace SM64_model_importer
             if (dlg.ShowDialog() != DialogResult.OK) return;
             sourceFileName = dlg.FileName;
             LoadObj();
-            newDsp.renderstates.blendMode = blenderControl1.GetValues();
+            displayList.renderstates.blendMode = blenderControl1.GetValues();
             updateImportEnable(null, null);
+        }
+
+        private void btnConversionOptions_Click(object sender, EventArgs e)
+        {
+            if (conversionSettings.DoColorInterpretationDialog())
+                LoadObj();
         }
 
         private void updateImportEnable(object sender, EventArgs e)
@@ -93,7 +100,9 @@ namespace SM64_model_importer
         {
             try
             {
+                FileParser.Block old_settings = new FileParser.Block(this); //Restore settings for collision after loading
                 LoadObj();
+                LoadSettings(old_settings);
             }
             catch
             {
@@ -118,16 +127,16 @@ namespace SM64_model_importer
             WriteVertices();
             WriteCommands();
             int offsetInBank = segmentOffset & 0xFFFFFF;
-            for (int i = 0; i < newDsp.materialValues.Length; i++)
+            for (int i = 0; i < displayList.materialValues.Length; i++)
             {
-                cvt.writeInt32(bank.value, offsetInBank + 0x10 * i, newDsp.materialValues[i].highShading);
-                cvt.writeInt32(bank.value, offsetInBank + 0x10 * i + 8, newDsp.materialValues[i].lowShading);
+                cvt.writeInt32(bank.value, offsetInBank + 0x10 * i, displayList.materialValues[i].highShading);
+                cvt.writeInt32(bank.value, offsetInBank + 0x10 * i + 8, displayList.materialValues[i].lowShading);
             }
 
             Array.Copy(bank.value, offsetInBank, EmulationState.instance.ROM, bank.ROMStart + offsetInBank, totalSize);
 
             pointerControl.WritePointers(segmentOffset + commandOffset);
-            foreach (Subset subset in newDsp.subsets)
+            foreach (Subset subset in displayList.subsets)
             {
                 int value = subset.Texture.scrollingTextureRelativePointer + segmentOffset + commandOffset;
                 byte[] ptrValue = new byte[] { (byte)(value >> 0x18), (byte)((value & 0xFF0000) >> 0x10), (byte)((value & 0xFF00) >> 0x8), (byte)(value & 0xFF) };
@@ -147,9 +156,9 @@ namespace SM64_model_importer
             try
             {
 #endif
-            newDsp.ClearSubsets();
-            renderStateControl.Bind(newDsp.renderstates);
-            combinerStateControl.Bind(newDsp.renderstates.combiner);
+            displayList.ClearSubsets();
+            renderStateControl.Bind(displayList.renderstates);
+            combinerStateControl.Bind(displayList.renderstates.combiner);
             Dictionary<string, TextureInfo> newMatLibrary;
             string[] messages;
             
@@ -158,7 +167,7 @@ namespace SM64_model_importer
                 import = ObjReader.Read;
             else if (sourceFileName.EndsWith(".dae"))
                 import = ColladaImporter.Read;
-            import(sourceFileName, ref newDsp, out newMatLibrary, out messages);
+            import(sourceFileName, conversionSettings, ref displayList, out newMatLibrary, out messages);
             textureControl.materialLibrary = newMatLibrary;
             textureControl.Invalidate();
             lblObjFileName.Text = Path.GetFileName(sourceFileName);
@@ -186,8 +195,8 @@ namespace SM64_model_importer
         void UpdateAll()
         {
             int cursor = segmentOffset;
-            if (newDsp != null)
-                cursor += newDsp.materialValues.Length * 0x10;
+            if (displayList != null)
+                cursor += displayList.materialValues.Length * 0x10;
             vertexOffset = cursor - segmentOffset;
             UpdateVertexAndCommands();
         }
@@ -195,9 +204,9 @@ namespace SM64_model_importer
         void UpdateVertexAndCommands()
         {
             int cursor = segmentOffset + vertexOffset;
-            if (newDsp != null)
+            if (displayList != null)
             {
-                foreach (Subset subset in newDsp.subsets)
+                foreach (Subset subset in displayList.subsets)
                     foreach (TrianglePatch patch in subset.Patches)
                     {
                         patch.segmentedPointer = cursor;
@@ -213,16 +222,16 @@ namespace SM64_model_importer
             int layer = (int)numLayer.Value;
             if (layer == 2 || layer == 3) layer = 1;
 
-            if (newDsp == null)
+            if (displayList == null)
             {
                 txtRawCommands.Text = "No Displaylist loaded.";
                 return;
             }
-            newDsp.BuildCommands(segmentOffset, layer);
-            totalSize = commandOffset + newDsp.commands.Length * 8;
+            displayList.BuildCommands(segmentOffset, layer);
+            totalSize = commandOffset + displayList.commands.Length * 8;
             StringBuilder lolol = new StringBuilder();
             bool nonTriangle = true;
-            foreach (DisplayList.Command cmd in newDsp.commands)
+            foreach (DisplayList.Command cmd in displayList.commands)
             {
                 if (cmd.values[0] == 0x4 || cmd.values[0] == 0xBF)
                 {
@@ -240,7 +249,7 @@ namespace SM64_model_importer
 
         void WriteVertices()
         {
-            foreach (Subset subset in newDsp.subsets)
+            foreach (Subset subset in displayList.subsets)
             {
                 int baseMultiplierS = subset.Texture.baseMultiplierS;
                 int baseMultiplierT = subset.Texture.baseMultiplierT;
@@ -257,7 +266,7 @@ namespace SM64_model_importer
                 throw new Exception("Bad commands");
 
             int cursor = (segmentOffset & 0xFFFFFF) + commandOffset;
-            foreach (DisplayList.Command cmd in newDsp.commands)
+            foreach (DisplayList.Command cmd in displayList.commands)
             {
                 Array.Copy(cmd.values, 0, target.value, cursor, cmd.values.Length);
                 cursor += cmd.values.Length;
@@ -273,7 +282,6 @@ namespace SM64_model_importer
         {
             return new DisplayList.Command(0x06, 0, Main.instance.globalsControl.GetParameterAddress(param));
         }
-
         #endregion
 
         #region Save/Load Settings
@@ -295,16 +303,19 @@ namespace SM64_model_importer
             }
 
             block.SetString("Obj File", sourceFileName);
-            if (newDsp != null)
+            block.SetInt("Color Interpretation", (int)conversionSettings.colorInterpretation);
+            if (displayList != null)
             {
-                block.SetInt("Blend modes", newDsp.renderstates.blendMode);
-                block.SetInt("Render states", newDsp.renderstates.otherModesLow);
-                block.SetInt("RCP bits", newDsp.renderstates.RCPBits);
-                block.SetInt("Combiner Low", (int)(newDsp.renderstates.combiner.state & 0xFFFFFFFF));
-                block.SetInt("Combiner High", (int)((newDsp.renderstates.combiner.state >> 0x20) & 0xFFFFFF));
-                block.SetDouble("Texture Scale X", newDsp.renderstates.textureScaleX);
-                block.SetDouble("Texture Scale Y", newDsp.renderstates.textureScaleY);
+                block.SetInt("Blend modes", displayList.renderstates.blendMode);
+                block.SetInt("Render states", displayList.renderstates.otherModesLow);
+                block.SetInt("RCP Set", displayList.renderstates.RCPSet);
+                block.SetInt("RCP Unset", displayList.renderstates.RCPUnset);
+                block.SetInt("Combiner Low", (int)(displayList.renderstates.combiner.state & 0xFFFFFFFF));
+                block.SetInt("Combiner High", (int)((displayList.renderstates.combiner.state >> 0x20) & 0xFFFFFF));
+                block.SetDouble("Texture Scale X", displayList.renderstates.textureScaleX);
+                block.SetDouble("Texture Scale Y", displayList.renderstates.textureScaleY);
             }
+            if (this.textureControl.materialLibrary != null)
             foreach (KeyValuePair<string, TextureInfo> tex in this.textureControl.materialLibrary)
                 if (tex.Value.addressX != TextureInfo.AddressMode.G_TX_WRAP || tex.Value.addressY != TextureInfo.AddressMode.G_TX_WRAP || tex.Value.stRAMPointers.Length + tex.Value.stROMPointers.Length > 0)
                     block.SetBlock(tex.Key, new FileParser.Block(tex.Value));
@@ -313,6 +324,7 @@ namespace SM64_model_importer
         public void LoadSettings(FileParser.Block block)
         {
             sourceFileName = block.GetString("Obj File");
+            conversionSettings.colorInterpretation = (ConversionSettings.ColorInterpretation)block.GetInt("Color Interpretation", false);
             if (sourceFileName != "")
                 LoadObj();
             pointerControl.SetROMPointers(block.GetIntArray("ROM Pointers"));
@@ -334,22 +346,24 @@ namespace SM64_model_importer
                 }
 
 
-            if (newDsp != null)
+            if (displayList != null)
             {
-                newDsp.renderstates.blendMode = block.GetInt("Blend modes");
-                newDsp.renderstates.otherModesLow = block.GetInt("Render states");
-                newDsp.renderstates.RCPBits = block.GetInt("RCP bits");
-                newDsp.renderstates.combiner.state = ((long)(block.GetInt("Combiner High") & 0xFFFFFFFF) << 0x20) | ((long)block.GetInt("Combiner Low") & 0xFFFFFFFF);
-                newDsp.renderstates.textureScaleX = block.GetDouble("Texture Scale X");
-                newDsp.renderstates.textureScaleY = block.GetDouble("Texture Scale Y");
+                displayList.renderstates.blendMode = block.GetInt("Blend modes");
+                displayList.renderstates.otherModesLow = block.GetInt("Render states");
+                displayList.renderstates.RCPSet = block.GetInt("RCP Set", false);
+                displayList.renderstates.RCPUnset = block.GetInt("RCP Unset", false);
+                displayList.renderstates.combiner.state = ((long)(block.GetInt("Combiner High") & 0xFFFFFFFF) << 0x20) | ((long)block.GetInt("Combiner Low") & 0xFFFFFFFF);
+                displayList.renderstates.textureScaleX = block.GetDouble("Texture Scale X");
+                displayList.renderstates.textureScaleY = block.GetDouble("Texture Scale Y");
 
-                renderStateControl.Bind(newDsp.renderstates);
-                combinerStateControl.Bind(newDsp.renderstates.combiner);
-                blenderControl1.SetValues(newDsp.renderstates.blendMode);
+                renderStateControl.Bind(displayList.renderstates);
+                combinerStateControl.Bind(displayList.renderstates.combiner);
+                blenderControl1.SetValues(displayList.renderstates.blendMode);
             }
             updateImportEnable(null, null);
         }
 
         #endregion
+
     }
 }

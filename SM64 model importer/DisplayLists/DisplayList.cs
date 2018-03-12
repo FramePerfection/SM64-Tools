@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     public class DisplayList
     {
@@ -20,12 +20,12 @@ namespace SM64_model_importer
         //Layer is the first index. These are not completely correct.
         public static Command[][] defaultCommands = new Command[][] {
                                         null,
-                                        new Command[] {new Command(0xB9, 0x31D, (int)0x00442078), new Command(0xB7, 0x0, 0x00020000), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)},
+                                        new Command[] {new Command(0xB9, 0x31D, (int)0x00442078), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)},
                                         null,
                                         null,
-                                        new Command[] {new Command(0xB9, 0x31D, (int)0x00553078), new Command(0xB7, 0x0, 0x00022000), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)},
-                                        new Command[] {new Command(0xB9, 0x31D, (int)0x005049D8),new Command(0xB7, 0x0, 0x00022200), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)},
-                                        new Command[] {new Command(0xB9, 0x31D, (int)0x00504DD8),new Command(0xB7, 0x0, 0x00020200), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)}
+                                        new Command[] {new Command(0xB9, 0x31D, (int)0x00553078), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)},
+                                        new Command[] {new Command(0xB9, 0x31D, (int)0x005049D8), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)},
+                                        new Command[] {new Command(0xB9, 0x31D, (int)0x00504DD8), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)}
         };
 
         public void ClearSubsets()
@@ -43,8 +43,10 @@ namespace SM64_model_importer
             //restore default render states and end DL
             unchecked
             {
-                cmd.Add(new DisplayList.Command(0xE7));
                 renderstates.Reset(cmd, layer);
+                cmd.Add(new DisplayList.Command(0xE6));
+                cmd.Add(new DisplayList.Command(0xE7));
+                cmd.Add(new DisplayList.Command(0xE8));
                 cmd.Add(new Command(0xB8, 0, 0));
             }
             commands = cmd.ToArray();
@@ -97,6 +99,7 @@ namespace SM64_model_importer
                 foreach (Triangle t in patch.triangles)
                     targetList.Add(new DisplayList.Command(0xBF, 0, 0, 0, 0, (byte)(t.v1 * 0xA), (byte)(t.v2 * 0xA), (byte)(t.v3 * 0xA)));
             }
+           Texture.AppendResetCommands(targetList);
         }
 
         public void CreatePatches()

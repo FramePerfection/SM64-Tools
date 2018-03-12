@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using SM64RAM;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     public class CollisionTriangle
     {

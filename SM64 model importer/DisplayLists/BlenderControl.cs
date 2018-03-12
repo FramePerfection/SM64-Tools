@@ -6,7 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     public partial class BlenderControl : UserControl
     {

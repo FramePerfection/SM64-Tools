@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.IO;
 using SM64RAM;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     public partial class CollisionControl : UserControl, Importable, ReadWrite
     {
@@ -67,7 +67,9 @@ namespace SM64_model_importer
         {
             try
             {
+                FileParser.Block  old_settings = new FileParser.Block(this); //Restore settings for collision after loading
                 LoadFile();
+                LoadSettings(old_settings);
             }
             catch
             {

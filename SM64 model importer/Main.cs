@@ -9,7 +9,7 @@ using System.IO;
 using SM64RAM;
 using System.Text.RegularExpressions;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     public interface Importable
     {
@@ -97,8 +97,8 @@ namespace SM64_model_importer
             foreach (KeyValuePair<string, TextureImage> texture in textureLibrary.textures)
             {
                 texture.Value.segmentOffset = cursor;
-                texture.Value.WriteBytes();
-                cursor += texture.Value.GetSizeInBytes();
+                texture.Value.WriteBytes(ref cursor);
+                cursor = (cursor + 7) / 8 * 8;
             }
             int offsetInBank = segmentedAddress & 0xFFFFFF;
             EmulationState.RAMBank bank = EmulationState.instance.banks[segmentedAddress >> 0x18];
@@ -194,6 +194,18 @@ namespace SM64_model_importer
             AddTabPage(ctrl, "Collision");
             collisionMaps.Add(ctrl);
         }
+        public void RemoveDisplayList(DisplayListControl ctrl, TabPage page)
+        {
+            if (ctrl == null) return;
+            tabImports.TabPages.Remove(page);
+            displayLists.Remove(ctrl);
+        }
+        public void RemoveCollision(CollisionControl ctrl, TabPage page)
+        {
+            if (ctrl == null) return;
+            tabImports.TabPages.Remove(page);
+            collisionMaps.Remove(ctrl);
+        }
 
         #region Save/Load Settings
 
@@ -242,7 +254,7 @@ namespace SM64_model_importer
             runLevelScripts.Clear();
             if (SM64RAM.EmulationState.instance.ROM == null)
             {
-                EmulationState.messages.AppendMessage("An error occured while loading the ROM. Make sure no other programs are using the ROM file right now and try again.");
+                EmulationState.messages.AppendMessage("An error occured while loading the ROM. Make sure no other programs are using the ROM file right now and try again.", "Error");
                 return;
             }
 

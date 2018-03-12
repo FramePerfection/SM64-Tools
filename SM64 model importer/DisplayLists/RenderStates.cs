@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SM64RAM;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     public class RenderStates
     {
@@ -107,46 +107,67 @@ namespace SM64_model_importer
         #endregion
 
         #region B7 flags
-        public int RCPBits = 0x32000;
-        public bool RCP_Shade
+        public int RCPSet = 0x0;
+        public int RCPUnset = 0x0;
+        public enum RCP_OP
         {
-            get { return Utility.GetBit(RCPBits, 2); }
-            set { Utility.SetBit(ref RCPBits, 2, value); }
+            ignore = 0,
+            set = 1,
+            unset = 2
         }
-        public bool RCP_FlatVtxRGBA
+        RCP_OP GetRCP_OP(int bit) { return (RCP_OP)((Utility.GetBit(RCPSet, bit)  ? 1 : 0) | (Utility.GetBit(RCPUnset, bit) ? 2 : 0)); }
+        void SetRCP_OP(int bit, RCP_OP value)
         {
-            get { return Utility.GetBit(RCPBits, 9); }
-            set { Utility.SetBit(ref RCPBits, 9, value); }
+            Utility.SetBit(ref RCPSet, bit, value == RCP_OP.set);
+            Utility.SetBit(ref RCPUnset, bit, value == RCP_OP.unset);
         }
-        public bool RCP_CullFront
+
+        public RCP_OP RCP_SetShader
         {
-            get { return Utility.GetBit(RCPBits, 12); }
-            set { Utility.SetBit(ref RCPBits, 12, value); }
+            get { return GetRCP_OP(2); }
+            set { SetRCP_OP(2, value); }
         }
-        public bool RCP_CullBack
+
+        public RCP_OP RCP_FlatVtxRGBA
         {
-            get { return Utility.GetBit(RCPBits, 13); }
-            set { Utility.SetBit(ref RCPBits, 13, value); }
+            get { return GetRCP_OP(9); }
+            set { SetRCP_OP(9, value); }
         }
-        public bool RCP_Fog
+
+        public RCP_OP RCP_CullFront
         {
-            get { return Utility.GetBit(RCPBits, 16); }
-            set { Utility.SetBit(ref RCPBits, 16, value); }
+            get { return GetRCP_OP(12); }
+            set { SetRCP_OP(12, value); }
         }
-        public bool RCP_Lighting
+
+        public RCP_OP RCP_CullBack
         {
-            get { return Utility.GetBit(RCPBits, 17); }
-            set { Utility.SetBit(ref RCPBits, 17, value); }
+            get { return GetRCP_OP(13); }
+            set { SetRCP_OP(13, value); }
         }
-        public bool RCP_TexGen
+
+        public RCP_OP RCP_Fog
         {
-            get { return Utility.GetBit(RCPBits, 18); }
-            set { Utility.SetBit(ref RCPBits, 18, value); }
+            get { return GetRCP_OP(16); }
+            set { SetRCP_OP(16, value); }
         }
-        public bool RCP_TexGenLinear
+
+        public RCP_OP RCP_Lighting
         {
-            get { return Utility.GetBit(RCPBits, 19); }
-            set { Utility.SetBit(ref RCPBits, 19, value); }
+            get { return GetRCP_OP(17); }
+            set { SetRCP_OP(17, value); }
+        }
+
+        public RCP_OP RCP_TexGen
+        {
+            get { return GetRCP_OP(18); }
+            set { SetRCP_OP(18, value); }
+        }
+
+        public RCP_OP RCP_TexGenLinear
+        {
+            get { return GetRCP_OP(19); }
+            set { SetRCP_OP(19, value); }
         }
         #endregion
 
@@ -190,14 +211,11 @@ namespace SM64_model_importer
                 targetList.Add(new DisplayList.Command(0xB9, 0x201, 0x0)); //Disable ZSelect (lol)
 
                 SetParameter(targetList, Parameter.EnvironmentColor);
-                if (RCP_Fog)
-                {
-                    SetParameter(targetList, Parameter.FogColor);
-                    SetParameter(targetList, Parameter.FogIntensity);
-                }
+                SetParameter(targetList, Parameter.FogColor);
+                SetParameter(targetList, Parameter.FogIntensity);
 
-                targetList.Add(new DisplayList.Command(0xB6, 0x0, (~RCPBits) & 0x7FFFFFFE)); //Unset RCP bits
-                targetList.Add(new DisplayList.Command(0xB7, 0x0, RCPBits & 0x7FFFFFFE)); //Set RCP bits
+                targetList.Add(new DisplayList.Command(0xB6, 0x0, RCPUnset & 0x7FFFFFFE)); //Unset RCP bits
+                targetList.Add(new DisplayList.Command(0xB7, 0x0, RCPSet & 0x7FFFFFFE)); //Set RCP bits
 
                 targetList.Add(new DisplayList.Command(0xFC, (int)(combiner.state >> 0x20) & 0xFFFFFF, (int)(combiner.state & 0xFFFFFFFF))); //Set combiner
 
@@ -218,7 +236,8 @@ namespace SM64_model_importer
         {
             if (cycleType != BlenderControl.CycleModes.OneCycle)
                 targetList.Add(new DisplayList.Command(0xBA, 0x1402, 0x00000000));
-            targetList.Add(new DisplayList.Command(0xB6, 0x0, RCPBits & 0x7FFFFFFE)); //Set RCP bits
+            targetList.Add(new DisplayList.Command(0xB6, 0x0, RCPSet & 0x7FFFFFFE)); //Reset specifically set RCP bits
+            targetList.Add(new DisplayList.Command(0xB7, 0x0, RCPUnset & 0x7FFFFFFE)); //Reset specifically Unset RCP bits
             foreach (DisplayList.Command cmd in DisplayList.defaultCommands[layer])
                 targetList.Add(cmd);
         }

@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using SM64RAM;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     public partial class TextureControl : UserControl
     {
@@ -84,8 +84,8 @@ namespace SM64_model_importer
                 e.Graphics.DrawImage(texture.Value.GetBitmap(), rect);
                 i++;
             }
-            if (selectedTexture != null)
-                e.Graphics.DrawString(selectedTexture.comment, fnt, Brushes.Black, centerX, 0, align);
+            if (selectedTexture != null && selectedTexture.image != null)
+                e.Graphics.DrawString(selectedTexture.image.comment, fnt, Brushes.Black, centerX, 0, align);
         }
 
         void UpdateControls()

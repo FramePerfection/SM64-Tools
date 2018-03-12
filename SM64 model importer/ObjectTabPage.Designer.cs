@@ -1,4 +1,4 @@
-﻿namespace SM64_model_importer
+﻿namespace SM64ModelImporter
 {
     partial class ObjectTabPage
     {
@@ -41,6 +41,7 @@
             this.btnDeleteObject.TabIndex = 0;
             this.btnDeleteObject.Text = "X";
             this.btnDeleteObject.UseVisualStyleBackColor = true;
+            this.btnDeleteObject.Click += new System.EventHandler(this.btnDeleteObject_Click);
             // 
             // txtObjectName
             // 

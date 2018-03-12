@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.IO;
 using SM64RAM;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     public partial class CollisionTypeControl : UserControl
     {

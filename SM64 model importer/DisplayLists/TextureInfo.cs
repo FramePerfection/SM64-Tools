@@ -4,85 +4,8 @@ using System.Text;
 using System.Drawing;
 using SM64RAM;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
-    public class TextureImage
-    {
-        public enum BitsPerPixel
-        {
-            G_IM_SIZ_4b = 0,
-            G_IM_SIZ_8b = 1,
-            G_IM_SIZ_16b = 2,
-            G_IM_SIZ_32b = 3
-        }
-        public enum TextureFormat
-        {
-            G_IM_FMT_RGBA = 0,
-            G_IM_FMT_YUV = 1,
-            G_IM_FMT_CI = 2,
-            G_IM_FMT_IA = 3,
-            G_IM_FMT_I = 4
-        }
-
-
-        public int segmentOffset;
-        public Bitmap file;
-        public TextureFormat format = TextureFormat.G_IM_FMT_RGBA;
-        public BitsPerPixel bpp = BitsPerPixel.G_IM_SIZ_16b;
-        List<TextureInfo> users = new List<TextureInfo>();
-        public string comment = "";
-
-        public static TextureImage GetImageByName(string name, TextureInfo user)
-        {
-            TextureImage existing;
-            if (Main.instance.textureLibrary.textures.TryGetValue(name, out existing))
-            {
-                existing.AddUser(user);
-                return existing;
-            }
-            string comment;
-            TextureImage newImage = new TextureImage(ImageConverter.FitBitmap(name, out comment), user);
-            Main.instance.textureLibrary.textures.Add(name, newImage);
-            newImage.comment = comment;
-            return newImage;
-        }
-
-        private TextureImage(Bitmap bmp, TextureInfo user)
-        {
-            this.file = bmp;
-            users.Add(user);
-        }
-
-        public void AddUser(TextureInfo user)
-        {
-            if (!users.Contains(user))
-                users.Add(user);
-        }
-
-        public void RemoveUser(TextureInfo user)
-        {
-            users.Remove(user);
-            if (users.Count == 0)
-            {
-                Main.instance.textureLibrary.Remove(this);
-            }
-        }
-
-        public int GetSizeInBytes()
-        {
-            int actualBpp = 2 << (1 + (int)bpp);
-            return (file.Width * file.Height * actualBpp + 7) / 8;
-        }
-
-        public void WriteBytes()
-        {
-            EmulationState.RAMBank target = EmulationState.instance.banks[segmentOffset >> 0x18];
-            if (target == null)
-                throw new Exception("Bad Texture");
-            ImageConverter.ConvertRGBA(format, bpp, file, target.value, segmentOffset & 0xFFFFFF);
-        }
-    }
-
     public class TextureInfo : ReadWrite
     {
         public enum AddressMode
@@ -100,7 +23,7 @@ namespace SM64_model_importer
         public int wrapExponentX, wrapExponentY;
         public int materialIndex = 0;
         public AddressMode addressX = AddressMode.G_TX_WRAP, addressY = AddressMode.G_TX_WRAP;
-        public string comment = "";
+        //public string comment = "";
 
         public int shiftS { get; private set; }
         public int shiftT { get; private set; }
@@ -200,24 +123,33 @@ namespace SM64_model_importer
             int usedOffset = isCustom ? customAddress : image.segmentOffset;
             int actualBpp = 4 << (int)usedBpp;
 
-            int tile = 0;
+            int tile  = 0;
             int pallete = 0;
             int tmemOffset = 0;
-            bool ignoreShift = states.RCP_TexGen || states.RCP_TexGenLinear;
+            bool ignoreShift = states.RCP_TexGen == RenderStates.RCP_OP.set ||  states.RCP_TexGenLinear == RenderStates.RCP_OP.set;
             int shiftParamS = ignoreShift ? 0 : 16 - shiftS;
             int shiftParamT = ignoreShift ? 0 : 16 - shiftT;
 
             customClampX = 4 * (width - 1);
             customClampY = 4 * (height - 1);
 
+            targetList.Add(new DisplayList.Command(0xE8)); //G_RDPTILESYNC
+            if (usedFormat == TextureImage.TextureFormat.G_IM_FMT_CI)
+            {
+                targetList.Add(Commands.G_SETIMG(TextureImage.TextureFormat.G_IM_FMT_RGBA, TextureImage.BitsPerPixel.G_IM_SIZ_16b, 1, usedOffset));
+                targetList.Add(Commands.G_SETTILE(TextureImage.TextureFormat.G_IM_FMT_RGBA, TextureImage.BitsPerPixel.G_IM_SIZ_4b, 0, 0x100, tile, 0, AddressMode.G_TX_WRAP, 0, 0, AddressMode.G_TX_WRAP, 0, 0));
+                targetList.Add(Commands.G_LOADTLUT(tile, 1 << actualBpp));
+                targetList.Add(new DisplayList.Command(0xBA, 0x000E02, 0x00008000));
+                usedOffset += 2 << actualBpp;
+            }
+
             //This does not seem to be correct for "line" parameter in G_SETTILE with some graphics plugins
             int line = (actualBpp * width + 63) / 64;
 
             wrapExponentX = (int)Math.Log(width, 2);
             wrapExponentY = (int)Math.Log(height, 2);
-            targetList.Add(new DisplayList.Command(0xE8)); //G_RDPTILESYNC
             targetList.Add(Commands.G_SETIMG(usedFormat, usedBpp, width, usedOffset));
-            targetList.Add(Commands.G_SETTILE(usedFormat, usedBpp, line, tmemOffset, tile, pallete, addressY, wrapExponentY, shiftParamT, addressX, wrapExponentX, shiftParamS));
+            targetList.Add(Commands.G_SETTILE(usedFormat, usedBpp, line, tmemOffset, tile, 0, addressY, wrapExponentY, shiftParamT, addressX, wrapExponentX, shiftParamS));
 
 
             int txl2words = Math.Max(1, (width * actualBpp / 64));
@@ -231,6 +163,17 @@ namespace SM64_model_importer
 
             targetList.Add(new DisplayList.Command(0x03, 0x860010, materialOffset + materialIndex * 0x10)); //Light 1
             targetList.Add(new DisplayList.Command(0x03, 0x880010, materialOffset + materialIndex * 0x10 + 8)); //Light 2
+        }
+
+        public void AppendResetCommands(List<DisplayList.Command> targetList)
+        {
+            TextureImage.TextureFormat usedFormat = isCustom ? customFormat : image.format;
+            if (usedFormat == TextureImage.TextureFormat.G_IM_FMT_CI)
+            {
+
+                targetList.Add(new DisplayList.Command(0xE7));
+                targetList.Add(new DisplayList.Command(0xBA, 0x000E02, 0x00000000));
+            }
         }
 
         public void LoadSettings(FileParser.Block block)

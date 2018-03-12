@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Drawing;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     static class Program
     {

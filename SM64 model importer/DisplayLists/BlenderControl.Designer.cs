@@ -1,4 +1,4 @@
-﻿namespace SM64_model_importer
+﻿namespace SM64ModelImporter
 {
     partial class BlenderControl
     {
@@ -205,7 +205,7 @@
             // 
             // addressModeBindingSource
             // 
-            this.addressModeBindingSource.DataSource = typeof(SM64_model_importer.TextureInfo.AddressMode);
+            this.addressModeBindingSource.DataSource = typeof(SM64ModelImporter.TextureInfo.AddressMode);
             // 
             // groupBlender
             // 

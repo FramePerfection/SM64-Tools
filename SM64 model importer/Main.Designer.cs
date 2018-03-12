@@ -1,4 +1,4 @@
-﻿namespace SM64_model_importer
+﻿namespace SM64ModelImporter
 {
     partial class Main
     {
@@ -31,7 +31,7 @@
             this.btnImport = new System.Windows.Forms.Button();
             this.tabImports = new System.Windows.Forms.TabControl();
             this.tabPagePlus = new System.Windows.Forms.TabPage();
-            this.globalsControl = new SM64_model_importer.GlobalsControl();
+            this.globalsControl = new SM64ModelImporter.GlobalsControl();
             this.btnAddCollision = new System.Windows.Forms.Button();
             this.btnAddDisplayList = new System.Windows.Forms.Button();
             this.btnSaveSettings = new System.Windows.Forms.Button();

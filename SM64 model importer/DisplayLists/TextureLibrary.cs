@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     public class TextureLibrary : ReadWrite
     {

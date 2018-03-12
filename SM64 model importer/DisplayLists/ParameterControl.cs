@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using SM64RAM;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     [DefaultEvent("TypeChanged")]
     public partial class ParameterControl : UserControl

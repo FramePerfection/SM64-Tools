@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     public static class Commands
     {
+        public static DisplayList.Command G_LOADTLUT(int tile, int count)
+        {
+            int lF0 = (tile << 0x18) | (((count - 1) & 0x3FF) << 2 << 0xC);
+            return new DisplayList.Command(0xF0, 0, lF0);
+        }
 
         public static DisplayList.Command G_SETTILESIZE(int tile, int uls, int ult, int lrs, int lrt)
         {

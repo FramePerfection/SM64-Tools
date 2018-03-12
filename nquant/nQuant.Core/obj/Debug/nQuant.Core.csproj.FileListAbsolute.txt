@@ -1,0 +1,4 @@
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\nquant\nQuant.Core\bin\v4.0\Debug\nQuant.Core.dll
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\nquant\nQuant.Core\bin\v4.0\Debug\nQuant.Core.pdb
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\nquant\nQuant.Core\obj\Debug\nQuant.Core.dll
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\nquant\nQuant.Core\obj\Debug\nQuant.Core.pdb

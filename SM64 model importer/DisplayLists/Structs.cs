@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using SM64RAM;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     public class Vertex
     {

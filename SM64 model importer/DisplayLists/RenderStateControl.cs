@@ -7,24 +7,11 @@ using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
-    public class RenderStateControl : PropertyControl<RenderStates>
-    {
-        public RenderStateControl()
-            : base(6, 5)
-        {}
-    }
-    public class CombinerStateControl : PropertyControl<CombinerStates>
-    {
-        public CombinerStateControl() : base(8, 4)
-        {}
-    }
-
     public partial class PropertyControl<T> : UserControl
     {
         public event EventHandler StateChanged;
-
         Dictionary<PropertyInfo, ComboBox> cmbBoxes = new Dictionary<PropertyInfo, ComboBox>();
         Dictionary<PropertyInfo, CheckBox> chkBoxes = new Dictionary<PropertyInfo, CheckBox>();
 
@@ -106,5 +93,17 @@ namespace SM64_model_importer
                 StateChanged(this, e);
             haltEvents = false;
         }
+    }
+    public class RenderStateControl : PropertyControl<RenderStates>
+    {
+        public RenderStateControl()
+            : base(8, 5)
+        { }
+    }
+    public class CombinerStateControl : PropertyControl<CombinerStates>
+    {
+        public CombinerStateControl()
+            : base(8, 4)
+        { }
     }
 }

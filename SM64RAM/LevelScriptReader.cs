@@ -157,7 +157,7 @@ namespace SM64RAM
                         _continue &= ack(commandBytes);
                 else
                 {
-                    EmulationState.messages.AppendMessage("Encountered unknown command 0x" + cmd.ToString("X") + " with length " + cmdLen.ToString() + " at 0x" + cursor.ToString("X") + ".", "Error");
+                    EmulationState.messages.AppendMessage("Encountered unknown command 0x" + cmd.ToString("X") + " with length " + cmdLen.ToString() + " at 0x" + cursor.ToString("X") + " in bank 0x" + currentBankIndex.ToString("X") + ".", "Error");
                     return;
                 }
                 cursor += cmdLen;

@@ -6,7 +6,7 @@ using System.IO;
 using System.Windows.Forms;
 using SM64RAM;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     public class ObjReader
     {
@@ -15,7 +15,7 @@ namespace SM64_model_importer
             public int Vertex, Texture, Normal;
         }
 
-        public static void Read(string fileName, ref DisplayList dsp, out Dictionary<string, TextureInfo> allMaterials, out string[] messages)
+        public static void Read(string fileName, ConversionSettings conversionSettings, ref DisplayList dsp, out Dictionary<string, TextureInfo> allMaterials, out string[] messages)
         {
             List<string> messageList = new List<string>();
             string currentObject = "";

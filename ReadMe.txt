@@ -1,6 +1,9 @@
 THIS SOFTWARE IS DISTRIBUTED AS IS.
 NO WARRANTY IS GIVEN ABOUT FUNCTIONALITY AND SAFETY OF THIS SOFTWARE.
 
+This software uses a slightly modified version of the nQuant color quantization software.
+For more information, see "License.txt" in the nquant subdirectory.
+
 This SM64 Hacking Toolkit contains a model importer, a level script editor as well as a small patching engine for custom changes.
 The model importer can currently import .obj files as display lists and collision maps.
 The level script editor is in its early stages and can really just manipulate object placement at this point.

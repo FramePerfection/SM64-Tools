@@ -140,8 +140,9 @@ namespace SM64LevelEditor
                 Editor.currentLevel.MakeVisible(0);
                 Editor.currentLevel.SetAliasFile("Alias_BehaviourScripts.txt", "Alias_ModelIDs.txt");
             }
-            catch
+            catch (Exception ex)
             {
+                EmulationState.messages.AppendMessage("Unable to load level! Exception was:\n" + ex.ToString(), "Error");
                 Editor.currentLevel = null;
             }
 

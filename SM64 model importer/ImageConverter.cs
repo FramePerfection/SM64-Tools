@@ -5,14 +5,17 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
+using SM64RAM;
+using nQuant;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     class ImageConverter
     {
         delegate void PixelDataWriter(ref int cursor, byte[] outputData, int r, int g, int b, int a);
         static PixelDataWriter[,] writers = new PixelDataWriter[5, 4];
         static bool halfByte = false;
+        static WuQuantizer quantizer = new WuQuantizer();
 
         static ImageConverter()
         {
@@ -21,20 +24,20 @@ namespace SM64_model_importer
             writers[(int)TextureImage.TextureFormat.G_IM_FMT_IA, (int)TextureImage.BitsPerPixel.G_IM_SIZ_16b] = WriteIA16;
             writers[(int)TextureImage.TextureFormat.G_IM_FMT_I, (int)TextureImage.BitsPerPixel.G_IM_SIZ_4b] = WriteI4;
             writers[(int)TextureImage.TextureFormat.G_IM_FMT_I, (int)TextureImage.BitsPerPixel.G_IM_SIZ_8b] = WriteI8;
+            writers[(int)TextureImage.TextureFormat.G_IM_FMT_IA, (int)TextureImage.BitsPerPixel.G_IM_SIZ_4b] = WriteIA4;
+            writers[(int)TextureImage.TextureFormat.G_IM_FMT_IA, (int)TextureImage.BitsPerPixel.G_IM_SIZ_8b] = WriteIA8;
         }
 
-        public static Bitmap FitBitmap(string sourceFile, out string comment)
+        public static Bitmap FitBitmap(Bitmap source, int maxSize, out string comment)
         {
             bool makeTilable = true;
-
-            Bitmap source = (Bitmap)Bitmap.FromFile(sourceFile);
             comment = "Texture is fine.";
-            if (source.Width * source.Height <= 0x800)
+            if (source.Width * source.Height <= maxSize)
                 return source;
 
             int newWidth = source.Width;
             int newHeight = source.Height;
-            while (newWidth * newHeight > 0x800)
+            while (newWidth * newHeight > maxSize)
             {
                 if (!makeTilable)
                 {
@@ -55,10 +58,9 @@ namespace SM64_model_importer
                     newHeight = 1 << ((int)Math.Log(newHeight - 1, 2));
                 }
             }
-
             comment = "Image is too large (" + source.Width.ToString() + " x " + source.Height.ToString() + ") and has to be resized to " + newWidth.ToString() + " x " + newHeight.ToString();
-            if (newWidth * newHeight > 0x800)
-                EmulationState.messages.AppendMessage.MessageBox.Show("Failed to scale image down D:", "This should really not happen.");
+            if (newWidth * newHeight > maxSize)
+                EmulationState.messages.AppendMessage("Failed to scale image down D:", "This should really not happen");
 
             Rectangle destRect = new Rectangle(0, 0, newWidth, newHeight);
             Bitmap destImage = new Bitmap(newWidth, newHeight);
@@ -79,7 +81,6 @@ namespace SM64_model_importer
                     graphics.DrawImage(source, destRect, 0, 0, source.Width, source.Height, GraphicsUnit.Pixel, wrapMode);
                 }
             }
-            source.Dispose();
             return destImage;
         }
 
@@ -107,34 +108,64 @@ namespace SM64_model_importer
             return bmp;
         }
 
-        public static void ConvertRGBA(TextureImage.TextureFormat format, TextureImage.BitsPerPixel bpp, Bitmap source, byte[] outputStream, int cursor)
+        public static void ConvertRGBA(TextureImage.TextureFormat format, TextureImage.BitsPerPixel bpp, Bitmap source, byte[] outputStream, ref int cursor)
         {
             //Convert image to RGBA if necessary
-            Bitmap RGBAconvert = source.PixelFormat == PixelFormat.Format32bppArgb ? source : new Bitmap(source.Width, source.Height, PixelFormat.Format32bppPArgb);
+            bool createRGBA_convert = source.PixelFormat != PixelFormat.Format32bppArgb;
+            Bitmap RGBAconvert = createRGBA_convert ? new Bitmap(source.Width, source.Height, PixelFormat.Format32bppPArgb) : source;
             if (source.PixelFormat != PixelFormat.Format32bppArgb)
                 using (Graphics gr = Graphics.FromImage(RGBAconvert))
                     gr.DrawImage(source, new Rectangle(0, 0, RGBAconvert.Width, RGBAconvert.Height));
 
-            //Put image data into pixelData
-            BitmapData data = RGBAconvert.LockBits(new Rectangle(0, 0, RGBAconvert.Width, RGBAconvert.Height), ImageLockMode.ReadOnly, RGBAconvert.PixelFormat);
-            int stride = data.Stride / 4, width = data.Width, height = data.Height;
-            byte[] pixelData = new byte[stride * data.Height * 4];
-            Marshal.Copy(data.Scan0, pixelData, 0, pixelData.Length);
-            RGBAconvert.UnlockBits(data);
-            //RGBAconvert.Dispose();
 
-            PixelDataWriter writer = writers[(int)format, (int)bpp];
-            if (writer == null)
-                throw new Exception("Unsupported format " + format.ToString() + " / " + bpp.ToString() + "!");
-
-            //Write each pixel into the output stream
-            halfByte = false;
-            for (int y = 0; y < height; y++)
-                for (int x = 0; x < width; x++)
+            if (format == TextureImage.TextureFormat.G_IM_FMT_CI)
+            {
+                int colors = bpp == TextureImage.BitsPerPixel.G_IM_SIZ_4b ? 16 : 256;
+                Bitmap quantized = (Bitmap)quantizer.QuantizeImage(RGBAconvert, colors);
+                for (int i = 0; i < colors; i++)
                 {
-                    int i = (x + stride * (height - (y + 1))) * 4;
-                    writer(ref cursor, outputStream, pixelData[i + 2], pixelData[i + 1], pixelData[i + 0], pixelData[i + 3]);
+                    Color c = quantized.Palette.Entries[i];
+                    WriteRGBA16(ref cursor, outputStream, c.R, c.G, c.B, c.A);
                 }
+                cursor = ((cursor + 0xF) / 0x10) * 0x10; //Align cursor to multiple of 16 bytes (8 would probably work fine, too)
+                //Put image data into pixelData
+                BitmapData data = quantized.LockBits(new Rectangle(0, 0, RGBAconvert.Width, RGBAconvert.Height), ImageLockMode.ReadOnly, quantized.PixelFormat);
+                int stride = data.Stride, width = data.Width, height = data.Height;
+                byte[] indexData = new byte[stride * data.Height];
+                Marshal.Copy(data.Scan0, indexData, 0, indexData.Length);
+                quantized.UnlockBits(data);
+                //Write each pixel into the output stream
+                if (bpp == TextureImage.BitsPerPixel.G_IM_SIZ_4b)
+                    for (int y = 0; y < height; y++)
+                        for (int x = 0; x < width; x += 2)
+                            outputStream[cursor++] = (byte)((indexData[y * stride + x] << 0x4) | indexData[y * stride + x + 1]);
+                else
+                    for (int y = 0; y < height; y++)
+                        for (int x = 0; x < width; x++)
+                            outputStream[cursor++] = indexData[y * stride + x];
+            }
+            else
+            {
+                //Put image data into pixelData
+                BitmapData data = RGBAconvert.LockBits(new Rectangle(0, 0, RGBAconvert.Width, RGBAconvert.Height), ImageLockMode.ReadOnly, RGBAconvert.PixelFormat);
+                int stride = data.Stride / 4, width = data.Width, height = data.Height;
+                byte[] rgbaData = new byte[stride * data.Height * 4];
+                Marshal.Copy(data.Scan0, rgbaData, 0, rgbaData.Length);
+                RGBAconvert.UnlockBits(data);
+                PixelDataWriter writer = writers[(int)format, (int)bpp];
+                if (writer == null)
+                    throw new Exception("Unsupported format " + format.ToString() + " / " + bpp.ToString() + "!");
+                //Write each pixel into the output stream
+                halfByte = false;
+                for (int y = 0; y < height; y++)
+                    for (int x = 0; x < width; x++)
+                    {
+                        int i = (x + stride * (height - (y + 1))) * 4;
+                        writer(ref cursor, outputStream, rgbaData[i + 2], rgbaData[i + 1], rgbaData[i + 0], rgbaData[i + 3]);
+                    }
+            }
+            if (createRGBA_convert)
+                RGBAconvert.Dispose();
         }
 
         static void WriteRGBA16(ref int cursor, byte[] outputData, int r, int g, int b, int a)
@@ -175,6 +206,23 @@ namespace SM64_model_importer
         {
             int v = Math.Min(0xFF, ((r + g + b) / 3));
             outputData[cursor++] = (byte)v;
+        }
+
+        static void WriteIA8(ref int cursor, byte[] outputData, int r, int g, int b, int a)
+        {
+            int v = Math.Min(0xFF, ((r + g + b) / 3));
+            int alpha = a / 16;
+            outputData[cursor++] = (byte)((v & 0xF0) | (alpha & 0xF));
+        }
+        static void WriteIA4(ref int cursor, byte[] outputData, int r, int g, int b, int a)
+        {
+            int v = (r + g + b)/ (3 * 64);
+            int alpha = a / 64;
+            if (halfByte)
+                outputData[cursor++] |= (byte)(((v & 0x0C) | (alpha & 0x03)) << 4);
+            else
+                outputData[cursor] = (byte)((v & 0x0C) | (alpha & 0x03));
+            halfByte = !halfByte;
         }
     }
 }

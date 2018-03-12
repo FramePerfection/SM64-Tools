@@ -1,4 +1,4 @@
-﻿namespace SM64_model_importer
+﻿namespace SM64ModelImporter
 {
     partial class ParameterControl
     {

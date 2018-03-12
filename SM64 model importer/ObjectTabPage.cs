@@ -6,7 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 
-namespace SM64_model_importer
+namespace SM64ModelImporter
 {
     public partial class ObjectTabPage : UserControl
     {
@@ -32,6 +32,12 @@ namespace SM64_model_importer
                 parentPage.Text = type;
             else
                 parentPage.Text = type + ": " + txtObjectName.Text;
+        }
+
+        private void btnDeleteObject_Click(object sender, EventArgs e)
+        {
+            Main.instance.RemoveDisplayList(Controls[2] as DisplayListControl, parentPage);
+            Main.instance.RemoveCollision(Controls[2] as CollisionControl, parentPage);
         }
     }
 }
