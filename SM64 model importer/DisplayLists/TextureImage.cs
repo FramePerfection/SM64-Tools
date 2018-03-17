@@ -43,9 +43,11 @@ namespace SM64ModelImporter
                 existing.AddUser(user);
                 return existing;
             }
-            TextureImage newImage = new TextureImage((Bitmap)Bitmap.FromFile(name), user);
-            Main.instance.textureLibrary.textures.Add(name, newImage);
-            return newImage;
+            Bitmap source = (Bitmap)Bitmap.FromFile(name);
+            TextureImage clone = new TextureImage(new Bitmap(source), user);
+            source.Dispose();
+            Main.instance.textureLibrary.textures.Add(name, clone);
+            return clone;
         }
 
         private TextureImage(Bitmap bmp, TextureInfo user)

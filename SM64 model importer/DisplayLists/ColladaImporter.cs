@@ -8,17 +8,165 @@ using System.Reflection;
 
 namespace SM64ModelImporter
 {
-   public  class ColladaImporter
+    public class ColladaImporter
     {
 
-       //ignore warnings realted to these variables being unassigned. They will be set via reflection.
+        //ignore warnings realted to these variables being unassigned. They will be set via reflection.
         struct Color { public float R, G, B, A;}
         struct TexCoord { public float S, T;}
-        struct Vec3 { public float X, Y, Z;}
+        struct Vec3
+        {
+            public float X, Y, Z;
+            public Vec3 TransformPosition(Matrix mat)
+            {
+                Vec3 result;
+                result.X = mat.m[0 + 0] * X + mat.m[1 + 0] * Y + mat.m[2 + 0] * Z + mat.m[3 + 0];
+                result.Y = mat.m[0 + 4] * X + mat.m[1 + 4] * Y + mat.m[2 + 4] * Z + mat.m[3 + 4];
+                result.Z = mat.m[0 + 8] * X + mat.m[1 + 8] * Y + mat.m[2 + 8] * Z + mat.m[3 + 8];
+                return result;
+            }
+            public Vec3 TransformNormal(Matrix mat)
+            {
+                Vec3 result;
+                result.X = mat.m[0 + 0] * X + mat.m[1 + 0] * Y + mat.m[2 + 0] * Z;
+                result.Y = mat.m[0 + 4] * X + mat.m[1 + 4] * Y + mat.m[2 + 4] * Z;
+                result.Z = mat.m[0 + 8] * X + mat.m[1 + 8] * Y + mat.m[2 + 8] * Z;
+                return result;
+            }
+        }
+        struct Matrix
+        {
+            static Matrix()
+            {
+                Matrix _;
+                _.m = new float[] { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
+                identity = _;
+            }
+            public static Matrix identity { get; private set; }
+            public float[] m;
+            public Matrix InvertTranspose()
+            {
+                float[] inv = new float[16];
+                inv[0] = m[5] * m[10] * m[15] -
+                         m[5] * m[11] * m[14] -
+                         m[9] * m[6] * m[15] +
+                         m[9] * m[7] * m[14] +
+                         m[13] * m[6] * m[11] -
+                         m[13] * m[7] * m[10];
+
+                inv[1] = -m[4] * m[10] * m[15] +
+                          m[4] * m[11] * m[14] +
+                          m[8] * m[6] * m[15] -
+                          m[8] * m[7] * m[14] -
+                          m[12] * m[6] * m[11] +
+                          m[12] * m[7] * m[10];
+
+                inv[2] = m[4] * m[9] * m[15] -
+                         m[4] * m[11] * m[13] -
+                         m[8] * m[5] * m[15] +
+                         m[8] * m[7] * m[13] +
+                         m[12] * m[5] * m[11] -
+                         m[12] * m[7] * m[9];
+
+                inv[3] = -m[4] * m[9] * m[14] +
+                           m[4] * m[10] * m[13] +
+                           m[8] * m[5] * m[14] -
+                           m[8] * m[6] * m[13] -
+                           m[12] * m[5] * m[10] +
+                           m[12] * m[6] * m[9];
+
+                inv[4] = -m[1] * m[10] * m[15] +
+                          m[1] * m[11] * m[14] +
+                          m[9] * m[2] * m[15] -
+                          m[9] * m[3] * m[14] -
+                          m[13] * m[2] * m[11] +
+                          m[13] * m[3] * m[10];
+
+                inv[5] = m[0] * m[10] * m[15] -
+                         m[0] * m[11] * m[14] -
+                         m[8] * m[2] * m[15] +
+                         m[8] * m[3] * m[14] +
+                         m[12] * m[2] * m[11] -
+                         m[12] * m[3] * m[10];
+
+                inv[6] = -m[0] * m[9] * m[15] +
+                          m[0] * m[11] * m[13] +
+                          m[8] * m[1] * m[15] -
+                          m[8] * m[3] * m[13] -
+                          m[12] * m[1] * m[11] +
+                          m[12] * m[3] * m[9];
+
+                inv[7] = m[0] * m[9] * m[14] -
+                          m[0] * m[10] * m[13] -
+                          m[8] * m[1] * m[14] +
+                          m[8] * m[2] * m[13] +
+                          m[12] * m[1] * m[10] -
+                          m[12] * m[2] * m[9];
+
+                inv[8] = m[1] * m[6] * m[15] -
+                         m[1] * m[7] * m[14] -
+                         m[5] * m[2] * m[15] +
+                         m[5] * m[3] * m[14] +
+                         m[13] * m[2] * m[7] -
+                         m[13] * m[3] * m[6];
+
+                inv[9] = -m[0] * m[6] * m[15] +
+                          m[0] * m[7] * m[14] +
+                          m[4] * m[2] * m[15] -
+                          m[4] * m[3] * m[14] -
+                          m[12] * m[2] * m[7] +
+                          m[12] * m[3] * m[6];
+
+                inv[10] = m[0] * m[5] * m[15] -
+                          m[0] * m[7] * m[13] -
+                          m[4] * m[1] * m[15] +
+                          m[4] * m[3] * m[13] +
+                          m[12] * m[1] * m[7] -
+                          m[12] * m[3] * m[5];
+
+                inv[11] = -m[0] * m[5] * m[14] +
+                           m[0] * m[6] * m[13] +
+                           m[4] * m[1] * m[14] -
+                           m[4] * m[2] * m[13] -
+                           m[12] * m[1] * m[6] +
+                           m[12] * m[2] * m[5];
+
+                inv[12] = -m[1] * m[6] * m[11] +
+                          m[1] * m[7] * m[10] +
+                          m[5] * m[2] * m[11] -
+                          m[5] * m[3] * m[10] -
+                          m[9] * m[2] * m[7] +
+                          m[9] * m[3] * m[6];
+
+                inv[13] = m[0] * m[6] * m[11] -
+                         m[0] * m[7] * m[10] -
+                         m[4] * m[2] * m[11] +
+                         m[4] * m[3] * m[10] +
+                         m[8] * m[2] * m[7] -
+                         m[8] * m[3] * m[6];
+
+                inv[14] = -m[0] * m[5] * m[11] +
+                           m[0] * m[7] * m[9] +
+                           m[4] * m[1] * m[11] -
+                           m[4] * m[3] * m[9] -
+                           m[8] * m[1] * m[7] +
+                           m[8] * m[3] * m[5];
+
+                inv[15] = m[0] * m[5] * m[10] -
+                          m[0] * m[6] * m[9] -
+                          m[4] * m[1] * m[10] +
+                          m[4] * m[2] * m[9] +
+                          m[8] * m[1] * m[6] -
+                          m[8] * m[2] * m[5];
+                Matrix result;
+                result.m = inv;
+                return result;
+            }
+        }
 
         public static void Read(string fileName, ConversionSettings conversionSettings, ref DisplayList dsp, out Dictionary<string, TextureInfo> allMaterials, out string[] messages)
         {
-            messages = new string[] { "Collada importing is not well tested nor fully implemented yet!" };
+            messages = new string[0];
             if (conversionSettings.colorInterpretation == ConversionSettings.ColorInterpretation.Undefined)
                 if (!conversionSettings.DoColorInterpretationDialog())
                 {
@@ -26,27 +174,34 @@ namespace SM64ModelImporter
                     return;
                 }
             string rootDirectory = System.IO.Path.GetDirectoryName(fileName);
-
             System.Xml.XmlDataDocument doc = new XmlDataDocument();
             doc.Load(fileName);
             XmlNamespaceManager mgr = new XmlNamespaceManager(doc.NameTable);
             mgr.AddNamespace("df", doc.DocumentElement.NamespaceURI);
-            XmlNodeList meshNodes = doc.SelectNodes("//df:COLLADA/df:library_geometries/df:geometry/df:mesh", mgr);
             List<Subset> meshes = new List<Subset>();
             XmlNode imageLibraryNode = doc.SelectSingleNode("//df:COLLADA/df:library_images", mgr);
             XmlNode materialLibraryNode = doc.SelectSingleNode("//df:COLLADA/df:library_materials", mgr);
             XmlNode effectLibraryNode = doc.SelectSingleNode("//df:COLLADA/df:library_effects", mgr);
+            XmlNode geometryLibraryNode = doc.SelectSingleNode("//df:COLLADA/df:library_geometries", mgr);
+            XmlNode sceneLibraryNode = doc.SelectSingleNode("//df:COLLADA/df:library_visual_scenes", mgr);
+            XmlNodeList geometryNodes = sceneLibraryNode.SelectNodes("df:visual_scene/df:node/df:instance_geometry", mgr);
             bool flipYZ = doc.SelectSingleNode("//df:COLLADA/df:asset/df:up_axis", mgr).InnerText == "Z_UP";
 
             allMaterials = new Dictionary<string, TextureInfo>();
             allMaterials["<Undefined>"] = new TextureInfo(null);
 
-            foreach (XmlNode meshNode in meshNodes)
+            foreach (XmlNode geometryNode in geometryNodes)
             {
-                Subset meshSubset = new Subset();
-                meshes.Add(meshSubset);
+                XmlNode meshNode = geometryLibraryNode.SelectSingleNode("df:geometry[@id='" + geometryNode.Attributes["url"].Value.Remove(0, 1) + "']/df:mesh", mgr);
+                XmlNode transformNode = geometryNode.SelectSingleNode("../df:matrix[@sid='transform']", mgr);
+                Matrix transform = Matrix.identity;
+                if (transformNode != null)
+                    transform.m = Array.ConvertAll<string, float>(transformNode.InnerText.Split(' '), (s) => float.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture));
+                Matrix normalTransform = transform.InvertTranspose();
                 foreach (XmlNode trianglesNode in meshNode.SelectNodes("df:triangles", mgr))
                 {
+                    Subset meshSubset = new Subset();
+                    meshes.Add(meshSubset);
                     List<Vertex> vertexBuffer = new List<Vertex>(); //final vertex buffer for this material
                     List<int> indexBuffer = new List<int>(); //final index buffer for this material
 
@@ -117,12 +272,14 @@ namespace SM64ModelImporter
                     for (int i = 0; i < vertices.Length; i++)
                     {
                         Vec3 position = positions == null ? new Vec3() : positions[indices[i * stride + vertexOffset]];
+                        position = position.TransformPosition(transform);
                         Vec3 normal = normals == null ? new Vec3() : normals[indices[i * stride + normalOffset]];
+                        normal = normal.TransformNormal(normalTransform);
                         TexCoord texCoord = texCoords == null ? new TexCoord() : texCoords[indices[i * stride + texCoordOffset]];
                         Color color = colors == null ? defaultColor : colors[indices[i * stride + colorOffset]];
                         vertices[i] = flipYZ ? new Vertex(new Vector3(position.X, position.Z, -position.Y), new Vector2(texCoord.S, texCoord.T), new Vector3(normal.X, normal.Z, -normal.Y))
                             : new Vertex(new Vector3(position.X, position.Y, position.Z), new Vector2(texCoord.S, texCoord.T), new Vector3(normal.X, normal.Y, normal.Z));
-                        Color c = colors[indices[i * stride + 3]];
+                        Color c = colors == null ? defaultColor : colors[indices[i * stride + 3]];
                         if (conversionSettings.colorInterpretation == ConversionSettings.ColorInterpretation.ReplaceNormal)
                         {
                             vertices[i].nx = (sbyte)(c.R * 255);

@@ -35,10 +35,24 @@ namespace SM64ModelImporter
 
         public void BuildCommands(int segmentOffset, int layer)
         {
+            Dictionary<TextureInfo, List<Subset>> subsetGroups = new Dictionary<TextureInfo, List<Subset>>();
+            foreach (Subset subset in subsets)
+            {
+                List<Subset> group;
+                if (!subsetGroups.TryGetValue(subset.Texture, out group))
+                    group = subsetGroups[subset.Texture] = new List<Subset>();
+                group.Add(subset);
+            }
+
             List<Command> cmd = new List<Command>();
             renderstates.AppendCommands(cmd, layer);
-            foreach (Subset subset in subsets)
-                subset.AppendCommands(cmd, segmentOffset, renderstates);
+            foreach (KeyValuePair<TextureInfo, List<Subset>> subsetGroup in subsetGroups)
+            {
+                subsetGroup.Key.AppendCommands(cmd, segmentOffset, renderstates);
+                foreach (Subset subset in subsetGroup.Value)
+                    subset.AppendCommands(cmd, renderstates);
+                subsetGroup.Key.AppendResetCommands(cmd);
+            }
 
             //restore default render states and end DL
             unchecked
@@ -50,11 +64,6 @@ namespace SM64ModelImporter
                 cmd.Add(new Command(0xB8, 0, 0));
             }
             commands = cmd.ToArray();
-        }
-
-        public int GetScrollingTexturePointer(Subset subset)
-        {
-            return 0;
         }
 
         public class Command
@@ -89,9 +98,8 @@ namespace SM64ModelImporter
         public TrianglePatch[] Patches;
         public TextureInfo Texture;
 
-        public void AppendCommands(List<DisplayList.Command> targetList, int materialOffset, RenderStates states)
+        public void AppendCommands(List<DisplayList.Command> targetList, RenderStates states)
         {
-            Texture.AppendCommands(targetList, materialOffset, states);
             foreach (TrianglePatch patch in Patches)
             {
                 int bufferSize = patch.numVertices * 0x10;
@@ -99,7 +107,6 @@ namespace SM64ModelImporter
                 foreach (Triangle t in patch.triangles)
                     targetList.Add(new DisplayList.Command(0xBF, 0, 0, 0, 0, (byte)(t.v1 * 0xA), (byte)(t.v2 * 0xA), (byte)(t.v3 * 0xA)));
             }
-           Texture.AppendResetCommands(targetList);
         }
 
         public void CreatePatches()

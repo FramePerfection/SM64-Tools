@@ -39,11 +39,11 @@
             this.ExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.currentAreaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectedModelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.thisLooksProToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolBoxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.thisLooksProToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -133,21 +133,7 @@
             this.selectedModelsToolStripMenuItem.Name = "selectedModelsToolStripMenuItem";
             this.selectedModelsToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.selectedModelsToolStripMenuItem.Text = "Selected Models";
-            // 
-            // thisLooksProToolStripMenuItem
-            // 
-            this.thisLooksProToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.helpToolStripMenuItem});
-            this.thisLooksProToolStripMenuItem.Name = "thisLooksProToolStripMenuItem";
-            this.thisLooksProToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.thisLooksProToolStripMenuItem.Text = "Help";
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
-            this.helpToolStripMenuItem.Text = "Controls";
-            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            this.selectedModelsToolStripMenuItem.Click += new System.EventHandler(this.selectedModelsToolStripMenuItem_Click);
             // 
             // viewToolStripMenuItem
             // 
@@ -163,16 +149,31 @@
             this.toolBoxToolStripMenuItem.Checked = true;
             this.toolBoxToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolBoxToolStripMenuItem.Name = "toolBoxToolStripMenuItem";
-            this.toolBoxToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.toolBoxToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.toolBoxToolStripMenuItem.Text = "Tool Box";
             this.toolBoxToolStripMenuItem.Click += new System.EventHandler(this.toolBoxToolStripMenuItem_Click);
             // 
             // logToolStripMenuItem
             // 
             this.logToolStripMenuItem.Name = "logToolStripMenuItem";
-            this.logToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.logToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.logToolStripMenuItem.Text = "Log";
             this.logToolStripMenuItem.Click += new System.EventHandler(this.historyToolStripMenuItem_Click);
+            // 
+            // thisLooksProToolStripMenuItem
+            // 
+            this.thisLooksProToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.helpToolStripMenuItem});
+            this.thisLooksProToolStripMenuItem.Name = "thisLooksProToolStripMenuItem";
+            this.thisLooksProToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.thisLooksProToolStripMenuItem.Text = "Help";
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.helpToolStripMenuItem.Text = "Controls";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
             // 
             // Main
             // 

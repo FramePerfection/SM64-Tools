@@ -207,6 +207,16 @@ namespace SM64LevelEditor
             Editor.currentArea.geometry.Export(sfd.FileName);
         }
 
+        private void selectedModelsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dlg = new FolderBrowserDialog();
+            if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+            foreach (Object obj in Editor.currentArea.selectedObjects)
+                if (obj.geometry != null)
+                    obj.geometry.Export(dlg.SelectedPath + "\\" + obj.model_ID + ".obj");
+            
+        }
+
         private void helpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EmulationState.messages.AppendMessage("Not implemented", "Error");
