@@ -29,7 +29,7 @@ namespace SM64RAM
         public static void SetBit(ref long value, int position, bool bit)
         {
             value = (value & ~(1 << position));
-            if (bit) value |= (1 << position);
+            if (bit) value |= (long)(1 << position);
         }
         public static bool GetBit(long value, int position)
         {

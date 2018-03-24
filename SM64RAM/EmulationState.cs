@@ -90,18 +90,18 @@ namespace SM64RAM
         {
             if (!AssertROM()) return false;
             int segment = value >> 0x18;
-            if (segment >= banks.Length || banks[segment] == null || banks[segment].value == null)
-            {
-                if (showError)
-                    messages.AppendMessage(segment >= banks.Length ? "Invalid Bank!" : "Bank 0x" + segment.ToString("X") + " not loaded!", "Error");
-                return false;
-            }
-            if ((value & 0xFFFFFF) > banks[segment].value.Length - length)
-            {
-                if (showError)
-                    messages.AppendMessage("Bank 0x" + segment.ToString("X") + " is too short.\nBank length was " + banks[segment].value.Length + ", but requested length was " + (value + length).ToString("X") + ".", "Error");
-                return false;
-            }
+                if (segment >= banks.Length || value < 0 || banks[segment] == null || banks[segment].value == null)
+                {
+                    if (showError)
+                        messages.AppendMessage(segment >= banks.Length ? "Invalid Bank!" : "Bank 0x" + segment.ToString("X") + " not loaded!", "Error");
+                    return false;
+                }
+                if ((value & 0xFFFFFF) > banks[segment].value.Length - length)
+                {
+                    if (showError)
+                        messages.AppendMessage("Bank 0x" + segment.ToString("X") + " is too short.\nBank length was " + banks[segment].value.Length + ", but requested length was " + (value + length).ToString("X") + ".", "Error");
+                    return false;
+                }
             return true;
         }
 
@@ -142,9 +142,9 @@ namespace SM64RAM
 
         public void LoadBank(int bank, int ROMStart, int ROMEnd, bool decompress)
         {
-            if (bank >= banks.Length)
+            if (bank >= banks.Length || bank < 0)
             {
-               messages.AppendMessage("Bank 0x" + bank.ToString("X") + " is too high!", "Error");
+                messages.AppendMessage("Bank 0x" + bank.ToString("X") + " is too high!", "Error");
                 return;
             }
             if (!AssertROM()) return;

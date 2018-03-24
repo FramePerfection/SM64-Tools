@@ -35,6 +35,11 @@ namespace SM64ModelImporter
         public string comment = "Unknown";
         Bitmap source, scaled;
 
+        public int shiftS { get; private set; }
+        public int shiftT { get; private set; }
+        public int baseMultiplierS { get; private set; }
+        public int baseMultiplierT { get; private set; }
+
         public static TextureImage GetImageByName(string name, TextureInfo user)
         {
             TextureImage existing;

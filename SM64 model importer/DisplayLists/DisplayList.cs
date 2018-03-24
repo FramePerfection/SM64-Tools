@@ -17,7 +17,7 @@ namespace SM64ModelImporter
         public material[] materialValues = new material[] { new material() };
 
         //Commands that are supposed to bring the rendering engine back into the state that the repsective render layer expects them to be in.
-        //Layer is the first index. These are not completely correct.
+        //Layer is the first index.
         public static Command[][] defaultCommands = new Command[][] {
                                         null,
                                         new Command[] {new Command(0xB9, 0x31D, (int)0x00442078), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)},
@@ -57,10 +57,10 @@ namespace SM64ModelImporter
             //restore default render states and end DL
             unchecked
             {
-                renderstates.Reset(cmd, layer);
                 cmd.Add(new DisplayList.Command(0xE6));
                 cmd.Add(new DisplayList.Command(0xE7));
                 cmd.Add(new DisplayList.Command(0xE8));
+                renderstates.Reset(cmd, layer);
                 cmd.Add(new Command(0xB8, 0, 0));
             }
             commands = cmd.ToArray();

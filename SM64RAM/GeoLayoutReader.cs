@@ -113,13 +113,13 @@ namespace SM64RAM
 
         static void ReadAmount(byte[] currentBank, int amount = -1)
         {
-            byte cmd, cmdLen;
+            byte cmd = 0, cmdLen;
             bool _continue = true;
             while (_continue)
             {
-                if (amount >= 0 && amount-- <= 0)
+                if (amount >= 0 && amount-- <= 0 || cursor >= currentBank.Length)
                     break;
-                cmd = currentBank[cursor];
+                    cmd = currentBank[cursor];
                 if (!commandLength.TryGetValue(cmd, out cmdLen))
                 {
                     MessageBox.Show("Encountered unknown command 0x" + cmd.ToString("X") + " at 0x" + cursor.ToString("X") + " and cannot derive length!"

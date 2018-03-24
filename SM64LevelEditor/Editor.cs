@@ -17,6 +17,7 @@ namespace SM64LevelEditor
         private static Stack<Action> undoHistory = new Stack<Action>();
         private static Action currentAction;
         public static bool allowSelect { get { return currentAction == null; } }
+        public static ProjectSettings projectSettings;
 
         static Dictionary<ActionKeyAttribute, ConstructorInfo> availableActions = new Dictionary<ActionKeyAttribute, ConstructorInfo>();
         static List<ActionKeyAttribute> possibleActions = new List<ActionKeyAttribute>();

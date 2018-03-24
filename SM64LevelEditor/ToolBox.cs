@@ -10,25 +10,45 @@ using SM64Renderer;
 
 namespace SM64LevelEditor
 {
+    struct LevelAddress
+    {
+        int value;
+        LevelAddress(int value) { this.value = value; }
+        public static implicit operator int(LevelAddress value) { return value.value; }
+        public static implicit operator LevelAddress(int value) { return new LevelAddress(value); }
+        public override string ToString()
+        {
+            if (Editor.projectSettings != null)
+                return Editor.projectSettings.GetLevelName(value) + " (0x" + value.ToString("X") + ")";
+            return "0x" + value.ToString("X");
+        }
+    }
+
     public partial class ToolBox : Form
     {
         public static ToolBox instance;
         Main main;
-        int[] levelAddresses = new int[0];
+        LevelAddress[] levelAddresses = new LevelAddress[0];
         public ToolBox(Main main)
         {
             instance = this;
             InitializeComponent();
             this.main = main;
-            warpControl.WarpsChanged += () => {if (Editor.currentArea != null) {
-                Editor.currentArea.warps.Clear(); Editor.currentArea.warps.AddRange(warpControl.GetWarps());
-            }};
+            warpControl.WarpsChanged += () =>
+            {
+                if (Editor.currentArea != null)
+                {
+                    Editor.currentArea.warps.Clear(); Editor.currentArea.warps.AddRange(warpControl.GetWarps());
+                }
+            };
             FormClosing += (_, e) => { e.Cancel = true; Hide(); };
         }
 
         public void SetLevelAddresses(int[] addresses)
         {
-            this.levelAddresses = addresses;
+            this.levelAddresses = new LevelAddress[addresses.Length];
+            for (int i = 0; i < addresses.Length; i++)
+                this.levelAddresses[i] = addresses[i];
             cmbLevel.DataSource = null;
             cmbLevel.DataSource = levelAddresses;
         }

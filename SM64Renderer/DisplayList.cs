@@ -238,6 +238,7 @@ namespace SM64Renderer
             {
                 string pngFile = materialDirectory + "/" + s.texture.segmentedPointer.ToString("X8") + ".png";
                 if (System.IO.File.Exists(pngFile)) continue;
+                if (s.texture0 != null)
                 D3D.TextureLoader.Save(pngFile, D3D.ImageFileFormat.Png, s.texture0);
                 targetStream.WriteLine("newmtl mtl" + s.texture.segmentedPointer.ToString("X8"));
                 targetStream.WriteLine("map_Kd " + relativeMaterialPath + s.texture.segmentedPointer.ToString("X8") + ".png");

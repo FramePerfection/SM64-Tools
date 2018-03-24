@@ -32,33 +32,33 @@
             this.btnLoadObj = new System.Windows.Forms.Button();
             this.groupObjControls = new System.Windows.Forms.GroupBox();
             this.pointerControl = new SM64RAM.PointerControl();
+            this.lblLayer = new System.Windows.Forms.Label();
+            this.numLayer = new System.Windows.Forms.NumericUpDown();
             this.lblObjFileName = new System.Windows.Forms.Label();
+            this.btnConversionOptions = new System.Windows.Forms.Button();
             this.btnSavePreset = new System.Windows.Forms.Button();
             this.btnLoadPreset = new System.Windows.Forms.Button();
             this.tabSettings = new System.Windows.Forms.TabControl();
             this.tabObj = new System.Windows.Forms.TabPage();
             this.tabCombine = new System.Windows.Forms.TabPage();
-            this.tabBlender = new System.Windows.Forms.TabPage();
-            this.tabOtherModes = new System.Windows.Forms.TabPage();
-            this.tabParams = new System.Windows.Forms.TabPage();
-            this.lblLayer = new System.Windows.Forms.Label();
-            this.numLayer = new System.Windows.Forms.NumericUpDown();
             this.combinerStateControl = new SM64ModelImporter.CombinerStateControl();
+            this.tabBlender = new System.Windows.Forms.TabPage();
             this.blenderControl1 = new SM64ModelImporter.BlenderControl();
+            this.tabOtherModes = new System.Windows.Forms.TabPage();
             this.renderStateControl = new SM64ModelImporter.RenderStateControl();
+            this.tabParams = new System.Windows.Forms.TabPage();
             this.paramFogIntensity = new SM64ModelImporter.ParameterControl();
             this.paramFogColor = new SM64ModelImporter.ParameterControl();
             this.paramColor = new SM64ModelImporter.ParameterControl();
             this.textureControl = new SM64ModelImporter.TextureControl();
-            this.btnConversionOptions = new System.Windows.Forms.Button();
             this.groupObjControls.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numLayer)).BeginInit();
             this.tabSettings.SuspendLayout();
             this.tabObj.SuspendLayout();
             this.tabCombine.SuspendLayout();
             this.tabBlender.SuspendLayout();
             this.tabOtherModes.SuspendLayout();
             this.tabParams.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numLayer)).BeginInit();
             this.SuspendLayout();
             // 
             // txtRawCommands
@@ -104,6 +104,38 @@
             this.pointerControl.Size = new System.Drawing.Size(258, 114);
             this.pointerControl.TabIndex = 12;
             // 
+            // lblLayer
+            // 
+            this.lblLayer.AutoSize = true;
+            this.lblLayer.Location = new System.Drawing.Point(25, 102);
+            this.lblLayer.Name = "lblLayer";
+            this.lblLayer.Size = new System.Drawing.Size(33, 13);
+            this.lblLayer.TabIndex = 11;
+            this.lblLayer.Text = "Layer";
+            // 
+            // numLayer
+            // 
+            this.numLayer.Location = new System.Drawing.Point(64, 99);
+            this.numLayer.Maximum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            this.numLayer.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numLayer.Name = "numLayer";
+            this.numLayer.Size = new System.Drawing.Size(42, 20);
+            this.numLayer.TabIndex = 10;
+            this.numLayer.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.numLayer.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // lblObjFileName
             // 
             this.lblObjFileName.AutoSize = true;
@@ -112,6 +144,17 @@
             this.lblObjFileName.Size = new System.Drawing.Size(82, 13);
             this.lblObjFileName.TabIndex = 6;
             this.lblObjFileName.Text = "<no file loaded>";
+            // 
+            // btnConversionOptions
+            // 
+            this.btnConversionOptions.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnConversionOptions.Location = new System.Drawing.Point(6, 64);
+            this.btnConversionOptions.Name = "btnConversionOptions";
+            this.btnConversionOptions.Size = new System.Drawing.Size(100, 19);
+            this.btnConversionOptions.TabIndex = 1;
+            this.btnConversionOptions.Text = "Conversion Options";
+            this.btnConversionOptions.UseVisualStyleBackColor = true;
+            this.btnConversionOptions.Click += new System.EventHandler(this.btnConversionOptions_Click);
             // 
             // btnSavePreset
             // 
@@ -171,6 +214,16 @@
             this.tabCombine.Text = "Combiner";
             this.tabCombine.UseVisualStyleBackColor = true;
             // 
+            // combinerStateControl
+            // 
+            this.combinerStateControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.combinerStateControl.Location = new System.Drawing.Point(3, 3);
+            this.combinerStateControl.Name = "combinerStateControl";
+            this.combinerStateControl.Size = new System.Drawing.Size(645, 148);
+            this.combinerStateControl.TabIndex = 0;
+            // 
             // tabBlender
             // 
             this.tabBlender.Controls.Add(this.blenderControl1);
@@ -182,6 +235,13 @@
             this.tabBlender.Text = "Blender";
             this.tabBlender.UseVisualStyleBackColor = true;
             // 
+            // blenderControl1
+            // 
+            this.blenderControl1.Location = new System.Drawing.Point(3, 3);
+            this.blenderControl1.Name = "blenderControl1";
+            this.blenderControl1.Size = new System.Drawing.Size(593, 118);
+            this.blenderControl1.TabIndex = 11;
+            // 
             // tabOtherModes
             // 
             this.tabOtherModes.Controls.Add(this.renderStateControl);
@@ -191,6 +251,15 @@
             this.tabOtherModes.TabIndex = 2;
             this.tabOtherModes.Text = "OtherModes";
             this.tabOtherModes.UseVisualStyleBackColor = true;
+            // 
+            // renderStateControl
+            // 
+            this.renderStateControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.renderStateControl.Location = new System.Drawing.Point(3, 3);
+            this.renderStateControl.Name = "renderStateControl";
+            this.renderStateControl.Size = new System.Drawing.Size(650, 148);
+            this.renderStateControl.TabIndex = 12;
             // 
             // tabParams
             // 
@@ -203,64 +272,6 @@
             this.tabParams.TabIndex = 4;
             this.tabParams.Text = "Parameters";
             this.tabParams.UseVisualStyleBackColor = true;
-            // 
-            // lblLayer
-            // 
-            this.lblLayer.AutoSize = true;
-            this.lblLayer.Location = new System.Drawing.Point(25, 102);
-            this.lblLayer.Name = "lblLayer";
-            this.lblLayer.Size = new System.Drawing.Size(33, 13);
-            this.lblLayer.TabIndex = 11;
-            this.lblLayer.Text = "Layer";
-            // 
-            // numLayer
-            // 
-            this.numLayer.Location = new System.Drawing.Point(64, 99);
-            this.numLayer.Maximum = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            this.numLayer.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numLayer.Name = "numLayer";
-            this.numLayer.Size = new System.Drawing.Size(42, 20);
-            this.numLayer.TabIndex = 10;
-            this.numLayer.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numLayer.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // combinerStateControl
-            // 
-            this.combinerStateControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.combinerStateControl.Location = new System.Drawing.Point(3, 3);
-            this.combinerStateControl.Name = "combinerStateControl";
-            this.combinerStateControl.Size = new System.Drawing.Size(645, 148);
-            this.combinerStateControl.TabIndex = 0;
-            // 
-            // blenderControl1
-            // 
-            this.blenderControl1.Location = new System.Drawing.Point(3, 3);
-            this.blenderControl1.Name = "blenderControl1";
-            this.blenderControl1.Size = new System.Drawing.Size(593, 118);
-            this.blenderControl1.TabIndex = 11;
-            // 
-            // renderStateControl
-            // 
-            this.renderStateControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.renderStateControl.Location = new System.Drawing.Point(3, 3);
-            this.renderStateControl.Name = "renderStateControl";
-            this.renderStateControl.Size = new System.Drawing.Size(650, 148);
-            this.renderStateControl.TabIndex = 12;
             // 
             // paramFogIntensity
             // 
@@ -299,17 +310,6 @@
             this.textureControl.Size = new System.Drawing.Size(664, 170);
             this.textureControl.TabIndex = 8;
             // 
-            // btnConversionOptions
-            // 
-            this.btnConversionOptions.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnConversionOptions.Location = new System.Drawing.Point(6, 64);
-            this.btnConversionOptions.Name = "btnConversionOptions";
-            this.btnConversionOptions.Size = new System.Drawing.Size(100, 19);
-            this.btnConversionOptions.TabIndex = 1;
-            this.btnConversionOptions.Text = "Conversion Options";
-            this.btnConversionOptions.UseVisualStyleBackColor = true;
-            this.btnConversionOptions.Click += new System.EventHandler(this.btnConversionOptions_Click);
-            // 
             // DisplayListControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -323,13 +323,13 @@
             this.Size = new System.Drawing.Size(664, 492);
             this.groupObjControls.ResumeLayout(false);
             this.groupObjControls.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numLayer)).EndInit();
             this.tabSettings.ResumeLayout(false);
             this.tabObj.ResumeLayout(false);
             this.tabCombine.ResumeLayout(false);
             this.tabBlender.ResumeLayout(false);
             this.tabOtherModes.ResumeLayout(false);
             this.tabParams.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numLayer)).EndInit();
             this.ResumeLayout(false);
 
         }

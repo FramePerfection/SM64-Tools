@@ -161,7 +161,7 @@ namespace SM64ModelImporter
             combinerStateControl.Bind(displayList.renderstates.combiner);
             Dictionary<string, TextureInfo> newMatLibrary;
             string[] messages;
-            
+
             Importer import = null;
             if (sourceFileName.EndsWith(".obj"))
                 import = ObjReader.Read;
@@ -251,8 +251,9 @@ namespace SM64ModelImporter
         {
             foreach (Subset subset in displayList.subsets)
             {
-                int baseMultiplierS = subset.Texture.baseMultiplierS;
-                int baseMultiplierT = subset.Texture.baseMultiplierT;
+                bool ignoreShift = displayList.renderstates.RCP_TexGen == RenderStates.RCP_OP.set || displayList.renderstates.RCP_TexGenLinear == RenderStates.RCP_OP.set;
+                int baseMultiplierS = ignoreShift ? subset.Texture.width : subset.Texture.baseMultiplierS;
+                int baseMultiplierT = ignoreShift ? subset.Texture.height : subset.Texture.baseMultiplierT;
                 foreach (TrianglePatch patch in subset.Patches)
                     patch.WriteBytes(baseMultiplierS, baseMultiplierT);
             }
@@ -316,13 +317,14 @@ namespace SM64ModelImporter
                 block.SetDouble("Texture Scale Y", displayList.renderstates.textureScaleY);
             }
             if (this.textureControl.materialLibrary != null)
-            foreach (KeyValuePair<string, TextureInfo> tex in this.textureControl.materialLibrary)
-                if (tex.Value.addressX != TextureInfo.AddressMode.G_TX_WRAP || tex.Value.addressY != TextureInfo.AddressMode.G_TX_WRAP || tex.Value.stRAMPointers.Length + tex.Value.stROMPointers.Length > 0)
-                    block.SetBlock(tex.Key, new FileParser.Block(tex.Value));
+                foreach (KeyValuePair<string, TextureInfo> tex in this.textureControl.materialLibrary)
+                    if (tex.Value.addressX != TextureInfo.AddressMode.G_TX_WRAP || tex.Value.addressY != TextureInfo.AddressMode.G_TX_WRAP || tex.Value.stRAMPointers.Length + tex.Value.stROMPointers.Length > 0)
+                        block.SetBlock(tex.Key, new FileParser.Block(tex.Value));
         }
 
         public void LoadSettings(FileParser.Block block)
         {
+            string oldSource = sourceFileName;
             sourceFileName = block.GetString("Obj File");
             conversionSettings.colorInterpretation = (ConversionSettings.ColorInterpretation)block.GetInt("Color Interpretation", false);
             if (sourceFileName != "")
@@ -360,7 +362,8 @@ namespace SM64ModelImporter
                 combinerStateControl.Bind(displayList.renderstates.combiner);
                 blenderControl1.SetValues(displayList.renderstates.blendMode);
             }
-            updateImportEnable(null, null);
+            if (oldSource != sourceFileName)
+                updateImportEnable(null, null);
         }
 
         #endregion

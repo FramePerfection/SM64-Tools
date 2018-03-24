@@ -10,6 +10,8 @@ using SM64RAM;
 using System.Diagnostics;
 using DX = Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System.Drawing.Imaging;
+using System.Drawing.Drawing2D;
 
 namespace SM64LevelEditor
 {
@@ -81,6 +83,8 @@ namespace SM64LevelEditor
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "SM64 ROMs (.z64)|*.z64";
             if (ofd.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+            Editor.projectSettings = new ProjectSettings(ofd.FileName);
+
             EmulationState.instance.LoadROM(ofd.FileName);
             EmulationState.instance.LoadBank(0x2, 0x108A40, 0x114750, true);
             EmulationState.instance.LoadBank(0x15, 0x2ABCA0, 0x2AC6B0, false);
@@ -138,7 +142,7 @@ namespace SM64LevelEditor
                 Editor.currentLevel = Level.LoadLevelROM(address);
                 Editor.currentAreaIndex = 0;
                 Editor.currentLevel.MakeVisible(0);
-                Editor.currentLevel.SetAliasFile("Alias_BehaviourScripts.txt", "Alias_ModelIDs.txt");
+                Editor.currentLevel.SetAliasFile(Editor.projectSettings.GetBehaviourAliasList(address), Editor.projectSettings.GetModelIDAliasList(address));
             }
             catch (Exception ex)
             {
@@ -214,7 +218,6 @@ namespace SM64LevelEditor
             foreach (Object obj in Editor.currentArea.selectedObjects)
                 if (obj.geometry != null)
                     obj.geometry.Export(dlg.SelectedPath + "\\" + obj.model_ID + ".obj");
-            
         }
 
         private void helpToolStripMenuItem_Click(object sender, EventArgs e)
@@ -238,6 +241,134 @@ namespace SM64LevelEditor
                 logWindow.Show();
             else
                 logWindow.Hide();
+        }
+
+        private void RAMBankToolStripMenuItem_MouseEnter(object sender, EventArgs e)
+        {
+            RAMBankToolStripMenuItem.DropDownItems.Clear();
+            RAMBankToolStripMenuItem.DropDownItems.Add(allToolStripMenuItem);
+            RAMBankToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+            for (int i = 0; i < EmulationState.instance.banks.Length; i++)
+                if (EmulationState.instance.banks[i] != null)
+                {
+                    int local = i;
+                    RAMBankToolStripMenuItem.DropDownItems.Add("Bank 0x" + i.ToString("X"), null, (_, __) => ExportBank(EmulationState.instance.banks[local]));
+                }
+        }
+
+        void ExportBank(EmulationState.RAMBank bank)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+            System.IO.File.WriteAllBytes(dlg.FileName, bank.value);
+        }
+
+        private void allToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dlg = new FolderBrowserDialog();
+            if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+            for (int i = 0; i < EmulationState.instance.banks.Length; i++)
+                if (EmulationState.instance.banks[i] != null)
+                    System.IO.File.WriteAllBytes(dlg.SelectedPath + "\\Bank 0x" + i.ToString("X") + ".bin", EmulationState.instance.banks[i].value);
+        }
+
+        private void backgroundToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            EmulationState.RAMBank backgroundBank = EmulationState.instance.banks[0xA]; //0xA holds background images.
+            if (backgroundBank == null)
+            {
+                EmulationState.messages.AppendMessage("No background bank loaded for this level.", "Information");
+                return;
+            }
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "image files|*.png";
+            if (sfd.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            Bitmap final = new Bitmap(249, 249);
+            Graphics g = Graphics.FromImage(final);
+            g.Clear(Color.Black);
+            for (int x = 0; x < 8; x++)
+                for (int y = 0; y < 8; y++)
+                {
+                    Bitmap patch = SM64Renderer.ImageConverter.ReadRGBA16(backgroundBank.value, (x + y * 8) * 0x800, 32, 32);
+                    g.DrawImage(patch, x * 31, y * 31);
+                }
+            g.Flush();
+            final.Save(sfd.FileName);
+        }
+
+        private void backgroundToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BackgroundDialog dlg = new BackgroundDialog();
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                foreach (BankDescription bank in Editor.currentLevel.loadedBanks)
+                    if (bank.type == BankDescription.BankType.Background)
+                    {
+                        bank.ROM_Start = dlg.selectedBank.ROM_Start;
+                        bank.compressed = dlg.selectedBank.compressed;
+                        bank.arg = dlg.selectedBank.arg;
+                        if (dlg.imageFileName != null)
+                        {
+                            Bitmap bmp = (Bitmap)Bitmap.FromFile(dlg.imageFileName);
+                            if (bmp.Width != 249 || bmp.Height != 249)
+                            {
+                                Bitmap destImage = new Bitmap(249, 249, PixelFormat.Format32bppArgb);
+
+                                destImage.SetResolution(bmp.HorizontalResolution, bmp.VerticalResolution);
+
+                                using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(destImage))
+                                {
+                                    graphics.CompositingMode = CompositingMode.SourceCopy;
+                                    graphics.CompositingQuality = CompositingQuality.HighQuality;
+                                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                                    graphics.SmoothingMode = SmoothingMode.HighQuality;
+                                    graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                                    using (ImageAttributes wrapMode = new ImageAttributes())
+                                    {
+                                        wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                                        graphics.DrawImage(bmp, new Rectangle(0, 0, 249, 249), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, wrapMode);
+                                    }
+                                }
+                                EmulationState.messages.AppendMessage("Selected image has been resized from " + bmp.Width + " x " + bmp.Height + " pixels to 256x256 pixels.", "Information");
+                                bmp.Dispose();
+                                bmp = destImage;
+                            }
+
+                            BitmapData dat = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                            byte[] bytes = new byte[bmp.Width * bmp.Height * 4];
+                            System.Runtime.InteropServices.Marshal.Copy(dat.Scan0, bytes, 0, bytes.Length);
+                            int stride = dat.Stride;
+                            bmp.UnlockBits(dat);
+                            byte[] newBankValue = new byte[256 * 256 * 2 + 10 * 8 * 4];
+                            int cursor = 0;
+                            for (int tileY = 0; tileY < 8; tileY++)
+                                for (int tileX = 0; tileX < 8; tileX++)
+                                    for (int y = 0; y < 32; y++)
+                                        for (int x = 0; x < 32; x++)
+                                        {
+                                            int offset = ((x + tileX * 31) * 4 + (y + tileY * 31) * stride);
+                                            short newValue = (short)(((bytes[offset + 2] & 0xF8) << 8) | ((bytes[offset + 1] & 0xF8) << 3) | (bytes[offset] >> 2));
+                                            newBankValue[cursor++] = (byte)(newValue >> 8);
+                                            newBankValue[cursor++] = (byte)(newValue & 0xFF);
+                                        }
+                            for (int y = 0; y < 8; y++)
+                                for (int x = 0; x < 10; x++)
+                                {
+                                    cvt.writeInt32(newBankValue, cursor, 0xA000000 + (x % 8 + y * 8) * 0x800);
+                                    cursor += 4;
+                                }
+                            bmp.Dispose();
+                            if (bank.compressed)
+                                newBankValue = SM64RAM.MIO0.encode_MIO0(newBankValue);
+                            bank.ROM_End = bank.ROM_Start + (uint)newBankValue.Length;
+                            Array.Copy(newBankValue, 0, EmulationState.instance.ROM, bank.ROM_Start, newBankValue.Length);
+                            System.IO.File.WriteAllBytes(EmulationState.instance.ROMName, EmulationState.instance.ROM);
+                            EmulationState.instance.banks[0xA] = new EmulationState.RAMBank(bank.ID, (int)bank.ROM_Start, (int)bank.ROM_End, bank.compressed);
+                            Editor.projectSettings.banks.Add(bank);
+                        }
+                    }
+            }
         }
     }
 }

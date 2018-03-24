@@ -206,7 +206,13 @@ namespace SM64ModelImporter
                     List<int> indexBuffer = new List<int>(); //final index buffer for this material
 
                     //Data to be read from XML
-                    string material = trianglesNode.Attributes["material"].Value;
+                    XmlAttribute materialAttribute = trianglesNode.Attributes["material"];
+                    if (materialAttribute == null)
+                    {
+                        messages = new string[] { "Mesh without materials found. Skipping..." };
+                        continue;
+                    }
+                    string material = materialAttribute.Value;
                     string effect = materialLibraryNode.SelectSingleNode("df:material[@id='" + material + "']/df:instance_effect", mgr).Attributes["url"].Value.Remove(0, 1);
                     XmlNode effectNode = effectLibraryNode.SelectSingleNode("df:effect[@id='" + effect + "']/df:profile_COMMON", mgr);
                     XmlNode textureNode = effectNode.SelectSingleNode("df:technique/*/df:diffuse/df:texture", mgr);

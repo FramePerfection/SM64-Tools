@@ -9,7 +9,7 @@ namespace SM64LevelEditor
 {
     public class Object
     {
-        const float ROTATION_FACTOR = (float)(2 * Math.PI / ushort.MaxValue);
+        const float ROTATION_FACTOR = (float)(2 * Math.PI / (360));
         [Browsable(false)]
         public Level level { get; private set; }
         [Browsable(false)]

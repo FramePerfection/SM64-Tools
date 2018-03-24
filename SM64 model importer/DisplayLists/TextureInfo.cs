@@ -81,6 +81,7 @@ namespace SM64ModelImporter
                 image.bpp = bpp;
                 image.format = format;
             }
+            UpdateSizeInfo();
         }
 
         public void UpdateCustom()
@@ -103,12 +104,12 @@ namespace SM64ModelImporter
             { width = usedMap.Width; height = usedMap.Height; }
             int baseS = width;
             int sS = 0;
-            while ((baseS & 1) == 0 && sS < 5)
+            while ((baseS & 1) == 0 && sS < 5 && false)
             { sS++; baseS >>= 1; }
 
             int baseT = height;
             int sT = 0;
-            while ((baseT & 1) == 0 && sT < 5)
+            while ((baseT & 1) == 0 && sT < 5 && false)
             { sT++; baseT >>= 1; }
             shiftS = sS;
             shiftT = sT;
@@ -127,8 +128,8 @@ namespace SM64ModelImporter
             int pallete = 0;
             int tmemOffset = 0;
             bool ignoreShift = states.RCP_TexGen == RenderStates.RCP_OP.set ||  states.RCP_TexGenLinear == RenderStates.RCP_OP.set;
-            int shiftParamS = ignoreShift ? 0 : 16 - shiftS;
-            int shiftParamT = ignoreShift ? 0 : 16 - shiftT;
+            int shiftParamS = ignoreShift ? 0 : (16 - shiftS);
+            int shiftParamT = ignoreShift ? 0 : (16 - shiftT);
 
             customClampX = 4 * (width - 1);
             customClampY = 4 * (height - 1);

@@ -23,7 +23,10 @@ namespace SM64LevelEditor
         public int segmentedPointer { get; private set; }
         public Area[] areas = new Area[0];
         Dictionary<byte, int> levelGeos = new Dictionary<byte, int>();
-        List<byte[]> loadedBanks = new List<byte[]>();
+        public List<BankDescription> loadedBanks = new List<BankDescription>();
+        Vector3 initialPosition;
+        int initialAngle;
+        byte initialUnknown;
 
         public static void InitCommands()
         {
@@ -38,6 +41,7 @@ namespace SM64LevelEditor
             LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.PLACE_OBJECT].Add(PLACE_OBJECT);
             LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.SET_MODEL_ID_DISPLAYLIST].Add(SET_MODEL_ID);
             LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.SET_MODEL_ID_GEOLAYOUT].Add(SET_MODEL_ID);
+            LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.SET_INITIAL_POSITION].Add(SET_INITIAL_POSITION);
             LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.BRANCH].Add((byte[] stuff) =>
             {
                 return true;
@@ -60,14 +64,14 @@ namespace SM64LevelEditor
         static bool LOAD_AND_JUMP(byte[] commandBytes)
         {
             if (current != null)
-            current.segmentedPointer = cvt.int32(commandBytes, 0xC);
+                current.segmentedPointer = cvt.int32(commandBytes, 0xC);
             return true;
         }
 
         static bool LOAD_BANK(byte[] commandBytes)
         {
             if (current != null)
-                current.loadedBanks.Add(commandBytes);
+                current.loadedBanks.Add(BankDescription.Parse(commandBytes));
             return true;
         }
 
@@ -135,6 +139,14 @@ namespace SM64LevelEditor
             return true;
         }
 
+        static bool SET_INITIAL_POSITION(byte[] commandBytes)
+        {
+            current.initialUnknown = commandBytes[2];
+            current.initialAngle = cvt.int16(commandBytes, 4);
+            current.initialPosition = new Vector3(cvt.int16(commandBytes, 6), cvt.int16(commandBytes, 8), cvt.int16(commandBytes, 10));
+            return true;
+        }
+
         #endregion
 
         public Level()
@@ -144,10 +156,10 @@ namespace SM64LevelEditor
             textureManager = new TextureManager(EmulationState.instance, renderDevice);
         }
 
-        public void SetAliasFile(string behaviourFile, string modelIDFile)
+        public void SetAliasFile(List<Alias<int>> behaviourAlias, List<Alias<byte>> modelIDAlias)
         {
-            behaviourAlias = Alias<int>.LoadFile(behaviourFile, (string str) => { int output = 0; if (cvt.ParseIntHex(str.Substring(2), out output)) return output; return -1; }, (int v) => "0x" + v.ToString("X8"));
-            modelIDAlias = Alias<byte>.LoadFile(modelIDFile, (string str) => { int output = 0; if (cvt.ParseIntHex(str.Substring(2), out output) && output <= byte.MaxValue) return (byte)output; return 0xFF; }, (byte v) => "0x" + v.ToString("X2"));
+            this.behaviourAlias = behaviourAlias;
+            this.modelIDAlias = modelIDAlias;
             ToolBox.instance.UpdateAlias();
         }
 
@@ -164,10 +176,11 @@ namespace SM64LevelEditor
             System.Windows.Forms.MessageBox.Show(EmulationState.instance.banks[segmentedPointer >> 0x18].ROMStart.ToString("X8"));
             int cursor = segmentedPointer & 0xFFFFFF;
             WriteCommand(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.START_LOADING_SEQUENCE);
-            foreach (byte[] loadedBank in loadedBanks)
+            foreach (BankDescription loadedBank in loadedBanks)
             {
-                Array.Copy(loadedBank, 0, bank, cursor, loadedBank.Length);
-                cursor += loadedBank.Length;
+                WriteCommand(ref cursor, bank, loadedBank.compressed ? LEVEL_SCRIPT_COMMANDS.LOAD_COMPRESSED : LEVEL_SCRIPT_COMMANDS.LOAD_UNCOMPRESSED, loadedBank.arg, loadedBank.ID,
+                                (byte)(loadedBank.ROM_Start >> 0x18), (byte)(loadedBank.ROM_Start >> 0x10), (byte)(loadedBank.ROM_Start >> 0x8), (byte)(loadedBank.ROM_Start),
+                                (byte)(loadedBank.ROM_End >> 0x18), (byte)(loadedBank.ROM_End >> 0x10), (byte)(loadedBank.ROM_End >> 0x8), (byte)(loadedBank.ROM_End));
             }
             WriteCommand(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.END_LOADING_SEQUENCE);
             WriteCommand(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.LOAD_MARIO, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x13, 0x00, 0x2E, 0xC0);
@@ -186,6 +199,15 @@ namespace SM64LevelEditor
             }
 
             WriteCommand(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.BUILD_LEVEL_COLLISION);
+            if (initialUnknown == 1) //Seems to determine wether this level can use its initial position. Not sure about this.
+            {
+                short x = (short)initialPosition.X, y = (short)initialPosition.Y, z = (short)initialPosition.Z;
+                WriteCommand(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.SET_INITIAL_POSITION, initialUnknown, 0,
+                                         (byte)((initialAngle & 0xFF00) >> 8), (byte)initialAngle,
+                                         (byte)((x & 0xFF00) >> 8), (byte)x,
+                                         (byte)((y & 0xFF00) >> 8), (byte)y,
+                                         (byte)((z & 0xFF00) >> 8), (byte)z);
+            }
             WriteCommand(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.CALL_FUNCTION_1, 0x00, 0x00, 0x80, 0x24, 0xBC, 0xD8);
             WriteCommand(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.CALL_FUNCTION_2, 0x00, 0x01, 0x80, 0x24, 0xBC, 0xD8);
 

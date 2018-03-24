@@ -34,6 +34,7 @@ namespace SM64LevelEditor.Controls
                 if (i < warpArray.Length - 1)
                     b.Append("\n");
             }
+            txtWarps.Clear();
             txtWarps.Text = b.ToString();
         }
 

@@ -17,9 +17,9 @@ namespace SM64Renderer
                 {
                     int i = offset + (x + y * width) * 2;
                     if (i >= bank.Length) return new Bitmap(1, 1);
+                    ushort v =(ushort)( (bank[i] << 8) | bank[i + 1]);
                     byte b1 = bank[i], b2 = bank[i + 1];
-                    byte A = (byte)((b2 & 0x1) > 0 ? 255 : 0), R = (byte)(b1 & 0xF8), G = (byte)((b1 & 0x7) << 5 | ((b2 & 0xc0) >> 6)), B = (byte)((b2 & 0x3E) << 2);
-                    byte v = (byte)((R + G + B) / 3);
+                    byte A = (byte)((v & 1) == 1 ? 255 : 0), R = (byte)(v >> 11 << 3), G = (byte)(v >> 6 << 3), B = (byte)(v >> 1 << 3);
 
                     int outputOffset = (x + y * width) * 4;
                     outputImage[outputOffset + 3] = A; //A

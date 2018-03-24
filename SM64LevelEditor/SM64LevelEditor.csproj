@@ -54,6 +54,13 @@
     <Compile Include="Actions\TransformActions.cs" />
     <Compile Include="Alias.cs" />
     <Compile Include="Area.cs" />
+    <Compile Include="BackgroundDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BackgroundDialog.Designer.cs">
+      <DependentUpon>BackgroundDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BankDescription.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Controls\ObjectControl.cs">
       <SubType>UserControl</SubType>
@@ -84,6 +91,7 @@
     </Compile>
     <Compile Include="Object.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProjectSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="ToolBox.cs">
@@ -93,6 +101,9 @@
       <DependentUpon>ToolBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Warp.cs" />
+    <EmbeddedResource Include="BackgroundDialog.resx">
+      <DependentUpon>BackgroundDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ObjectControl.resx">
       <DependentUpon>ObjectControl.cs</DependentUpon>
     </EmbeddedResource>
