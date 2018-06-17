@@ -115,7 +115,7 @@ namespace SM64ModelImporter
             set = 1,
             unset = 2
         }
-        RCP_OP GetRCP_OP(int bit) { return (RCP_OP)((Utility.GetBit(RCPSet, bit)  ? 1 : 0) | (Utility.GetBit(RCPUnset, bit) ? 2 : 0)); }
+        RCP_OP GetRCP_OP(int bit) { return (RCP_OP)((Utility.GetBit(RCPSet, bit) ? 1 : 0) | (Utility.GetBit(RCPUnset, bit) ? 2 : 0)); }
         void SetRCP_OP(int bit, RCP_OP value)
         {
             Utility.SetBit(ref RCPSet, bit, value == RCP_OP.set);
@@ -204,10 +204,12 @@ namespace SM64ModelImporter
             {
                 targetList.Add(new DisplayList.Command(0xE7, 0, 0));
 
-                if (cycleType == BlenderControl.CycleModes.TwoCycle)
-                    targetList.Add(new DisplayList.Command(0xBA, 0x1402, 0x00100000)); //Set cycle type to two cycle mode
-                int blender = ((blendMode & 0xFFFF) << 0x10) | (otherModesLow & 0xFFFF);
-                targetList.Add(new DisplayList.Command(0xB9, 0x31D, blender)); //Set blender
+                if (cycleType != BlenderControl.CycleModes.Ignore)
+                {
+                    targetList.Add(new DisplayList.Command(0xBA, 0x1402, ((int)cycleType) << 0x14)); //Set cycle type
+                    int blender = ((blendMode & 0xFFFF) << 0x10) | (otherModesLow & 0xFFFF);
+                    targetList.Add(new DisplayList.Command(0xB9, 0x31D, blender)); //Set blender
+                }
                 targetList.Add(new DisplayList.Command(0xB9, 0x201, 0x0)); //Disable ZSelect (lol)
 
                 SetParameter(targetList, Parameter.EnvironmentColor);
@@ -219,7 +221,6 @@ namespace SM64ModelImporter
 
                 targetList.Add(new DisplayList.Command(0xFC, (int)(combiner.state >> 0x20) & 0xFFFFFF, (int)(combiner.state & 0xFFFFFFFF))); //Set combiner
 
-                targetList.Add(Commands.G_SETTILE(TextureImage.TextureFormat.G_IM_FMT_RGBA, TextureImage.BitsPerPixel.G_IM_SIZ_16b, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0));
                 targetList.Add(new DisplayList.Command(0xBB, 0x1, (Math.Min(((int)(textureScaleX * (1 << 16))), 0xFFFF) << 0x10) | Math.Min((int)(textureScaleY * (1 << 16)), 0xFFFF)));
             }
         }

@@ -73,7 +73,6 @@
             // cmbCycleMode
             // 
             this.cmbCycleMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbCycleMode.Enabled = false;
             this.cmbCycleMode.FormattingEnabled = true;
             this.cmbCycleMode.Location = new System.Drawing.Point(6, 19);
             this.cmbCycleMode.Name = "cmbCycleMode";

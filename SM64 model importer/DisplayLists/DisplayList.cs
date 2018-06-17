@@ -6,15 +6,16 @@ namespace SM64ModelImporter
 {
     public class DisplayList
     {
-        public class material
+        public class Light
         {
-            public int highShading = (int)-1, lowShading = 0x7f7f7fFF;
+            public int color = (int)-1, ambient = 0x7f7f7fFF;
+            public int direction = 0x66666600;
         }
 
         public Subset[] subsets = new Subset[0];
         public Command[] commands;
         public RenderStates renderstates = new RenderStates();
-        public material[] materialValues = new material[] { new material() };
+        public Light[] lightValues = new Light[] { new Light() };
 
         //Commands that are supposed to bring the rendering engine back into the state that the repsective render layer expects them to be in.
         //Layer is the first index.
@@ -23,7 +24,7 @@ namespace SM64ModelImporter
                                         new Command[] {new Command(0xB9, 0x31D, (int)0x00442078), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)},
                                         null,
                                         null,
-                                        new Command[] {new Command(0xB9, 0x31D, (int)0x00553078), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)},
+                                        new Command[] {new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)},
                                         new Command[] {new Command(0xB9, 0x31D, (int)0x005049D8), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)},
                                         new Command[] {new Command(0xB9, 0x31D, (int)0x00504DD8), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)}
         };
@@ -57,9 +58,7 @@ namespace SM64ModelImporter
             //restore default render states and end DL
             unchecked
             {
-                cmd.Add(new DisplayList.Command(0xE6));
                 cmd.Add(new DisplayList.Command(0xE7));
-                cmd.Add(new DisplayList.Command(0xE8));
                 renderstates.Reset(cmd, layer);
                 cmd.Add(new Command(0xB8, 0, 0));
             }

@@ -38,8 +38,11 @@ namespace SM64ModelImporter
             OneCycle = 0,
             TwoCycle = 1,
             CopyTexture = 2,
-            Fill = 3
+            Fill = 3,
+            Ignore = -1
         }
+
+        public CycleModes cycleType { get { return (CycleModes)cmbCycleMode.SelectedValue; } }
 
         public BlenderControl()
         {
@@ -63,7 +66,11 @@ namespace SM64ModelImporter
 
         private void cmbCycleMode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            cmbP2.Enabled = cmbA2.Enabled = cmbM2.Enabled = cmbB2.Enabled = ((CycleModes)cmbCycleMode.SelectedItem == CycleModes.TwoCycle);
+            CycleModes mode = (CycleModes)cmbCycleMode.SelectedItem;
+            cmbP2.Enabled = cmbA2.Enabled = cmbM2.Enabled = cmbB2.Enabled = (mode == CycleModes.TwoCycle);
+            cmbP1.Enabled = cmbA1.Enabled = cmbM1.Enabled = cmbB1.Enabled = (mode != CycleModes.Ignore);
+            if (BlendModeChanged != null && initialized)
+                BlendModeChanged(this, e);
         }
 
         private void blendModeChanged(object sender, EventArgs e)
@@ -96,5 +103,18 @@ namespace SM64ModelImporter
                  ((int)cmbB2.SelectedItem << 0x0);
         }
 
+        public void SetCycleType(CycleModes value)
+        {
+            int i = 0;
+            foreach (CycleModes m in cmbCycleMode.Items)
+            {
+                if (m == value)
+                {
+                    cmbCycleMode.SelectedIndex = i;
+                    break;
+                }
+                i++;
+            }
+        }
     }
 }

@@ -89,8 +89,8 @@ namespace SM64ModelImporter
 
         public AlphaC Ac0
         {
-            get { return (AlphaC)Utility.GetBits(state, 5, 0x29); }
-            set { Utility.SetBits(ref state, 5, 0x29, (int)value); }
+            get { return (AlphaC)Utility.GetBits(state, 3, 0x29); }
+            set { Utility.SetBits(ref state, 3, 0x29, (int)value); }
         }
 
         public ColorA a1

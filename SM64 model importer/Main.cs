@@ -155,6 +155,8 @@ namespace SM64ModelImporter
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Display List presets|*.sm64import";
+            ofd.InitialDirectory = Path.GetFullPath( "Presets/Levels");
+            ofd.RestoreDirectory = false;
             if (ofd.ShowDialog() != DialogResult.OK) return;
             FileParser.Block b = new FileParser.Block(ofd.FileName);
             LoadSettings(b);

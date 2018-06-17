@@ -48,6 +48,8 @@ namespace SM64ModelImporter
                 existing.AddUser(user);
                 return existing;
             }
+            if (!System.IO.File.Exists(name))
+                return new TextureImage(new Bitmap(1, 1), user);
             Bitmap source = (Bitmap)Bitmap.FromFile(name);
             TextureImage clone = new TextureImage(new Bitmap(source), user);
             source.Dispose();

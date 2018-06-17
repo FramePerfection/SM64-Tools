@@ -134,36 +134,37 @@ namespace SM64ModelImporter
             customClampX = 4 * (width - 1);
             customClampY = 4 * (height - 1);
 
+            targetList.Add(Commands.G_SETTILE(TextureImage.TextureFormat.G_IM_FMT_RGBA, usedBpp, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0));
             targetList.Add(new DisplayList.Command(0xE8)); //G_RDPTILESYNC
             if (usedFormat == TextureImage.TextureFormat.G_IM_FMT_CI)
             {
-                targetList.Add(Commands.G_SETIMG(TextureImage.TextureFormat.G_IM_FMT_RGBA, TextureImage.BitsPerPixel.G_IM_SIZ_16b, 1, usedOffset));
                 targetList.Add(Commands.G_SETTILE(TextureImage.TextureFormat.G_IM_FMT_RGBA, TextureImage.BitsPerPixel.G_IM_SIZ_4b, 0, 0x100, tile, 0, AddressMode.G_TX_WRAP, 0, 0, AddressMode.G_TX_WRAP, 0, 0));
+                targetList.Add(Commands.G_SETIMG(TextureImage.TextureFormat.G_IM_FMT_RGBA, TextureImage.BitsPerPixel.G_IM_SIZ_16b, 1, usedOffset));
                 targetList.Add(Commands.G_LOADTLUT(tile, 1 << actualBpp));
                 targetList.Add(new DisplayList.Command(0xBA, 0x000E02, 0x00008000));
                 usedOffset += 2 << actualBpp;
             }
 
             //This does not seem to be correct for "line" parameter in G_SETTILE with some graphics plugins
-            int line = (actualBpp * width + 63) / 64;
+            int line = (Math.Min(0x10, actualBpp) * width + 63) / 64;
+            int txl2words = Math.Max(1, (width * actualBpp / 64));
+            int dxt = ((1 << 0xB) + txl2words - 1) / txl2words;
 
             wrapExponentX = (int)Math.Log(width, 2);
             wrapExponentY = (int)Math.Log(height, 2);
-            targetList.Add(Commands.G_SETIMG(usedFormat, usedBpp, width, usedOffset));
             targetList.Add(Commands.G_SETTILE(usedFormat, usedBpp, line, tmemOffset, tile, 0, addressY, wrapExponentY, shiftParamT, addressX, wrapExponentX, shiftParamS));
-
-
-            int txl2words = Math.Max(1, (width * actualBpp / 64));
-            int dxt = ((1 << 0xB) + txl2words - 1) / txl2words;
-            targetList.Add(new DisplayList.Command(0xE6)); //G_RDPLOADSYNC
-            targetList.Add(Commands.G_LOADBLOCK(tile, 0, 0, width * height, dxt));
 
             //Scrolling textures are achieved changing the uls and ult parameters of G_SETTILESIZE
             scrollingTextureRelativePointer = targetList.Count * 8;
             targetList.Add(Commands.G_SETTILESIZE(tile, 0, 0, customClampX, customClampY));
+            targetList.Add(Commands.G_SETIMG(usedFormat, usedBpp, width, usedOffset));
 
-            targetList.Add(new DisplayList.Command(0x03, 0x860010, materialOffset + materialIndex * 0x10)); //Light 1
-            targetList.Add(new DisplayList.Command(0x03, 0x880010, materialOffset + materialIndex * 0x10 + 8)); //Light 2
+            targetList.Add(new DisplayList.Command(0xE6)); //G_RDPLOADSYNC
+            targetList.Add(Commands.G_LOADBLOCK(7, 0, 0, width * height, dxt));
+
+
+            targetList.Add(new DisplayList.Command(0x03, 0x860010, materialOffset + materialIndex * 0x20)); //Light 1
+            targetList.Add(new DisplayList.Command(0x03, 0x880010, materialOffset + materialIndex * 0x20 + 10)); //Light 2
         }
 
         public void AppendResetCommands(List<DisplayList.Command> targetList)
@@ -171,7 +172,6 @@ namespace SM64ModelImporter
             TextureImage.TextureFormat usedFormat = isCustom ? customFormat : image.format;
             if (usedFormat == TextureImage.TextureFormat.G_IM_FMT_CI)
             {
-
                 targetList.Add(new DisplayList.Command(0xE7));
                 targetList.Add(new DisplayList.Command(0xBA, 0x000E02, 0x00000000));
             }

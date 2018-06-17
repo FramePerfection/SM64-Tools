@@ -80,6 +80,11 @@
       <DependentUpon>EnumSelectDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="DisplayLists\TextureLibrary.cs" />
+    <Compile Include="F3DParser\Argument.cs" />
+    <Compile Include="F3DParser\CommandDescription.cs" />
+    <Compile Include="F3DParser\F3DCommandDescriptors.cs" />
+    <Compile Include="F3DParser\F3DParser.cs" />
+    <Compile Include="F3DParser\Function.cs" />
     <Compile Include="FileParser.cs" />
     <Compile Include="GlobalsControl.cs">
       <SubType>UserControl</SubType>

@@ -30,7 +30,10 @@ namespace SM64ModelImporter
             {
                 if (haltEvents) return;
                 if (displayList != null)
+                {
                     displayList.renderstates.blendMode = blenderControl1.GetValues();
+                    displayList.renderstates.cycleType = blenderControl1.cycleType;
+                }
             };
             paramControls = new ParameterControl[] { paramColor, paramFogColor, paramFogIntensity };
             for (int k = 0; k < paramControls.Length; k++)
@@ -76,6 +79,8 @@ namespace SM64ModelImporter
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Display List presets|*.dl";
+            sfd.RestoreDirectory = false;
+            sfd.InitialDirectory = Path.GetFullPath("Presets/Display Lists");
             if (sfd.ShowDialog() != DialogResult.OK) return;
             System.IO.StreamWriter writer = new StreamWriter(sfd.FileName);
             FileParser.Block root = new FileParser.Block(this);
@@ -88,6 +93,8 @@ namespace SM64ModelImporter
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Display List presets|*.dl";
+            ofd.RestoreDirectory = false;
+            ofd.InitialDirectory = Path.GetFullPath("Presets/Display Lists");
             if (ofd.ShowDialog() != DialogResult.OK) return;
             LoadSettings(new FileParser.Block(ofd.FileName));
         }
@@ -127,10 +134,18 @@ namespace SM64ModelImporter
             WriteVertices();
             WriteCommands();
             int offsetInBank = segmentOffset & 0xFFFFFF;
-            for (int i = 0; i < displayList.materialValues.Length; i++)
+            for (int i = 0; i < displayList.lightValues.Length; i++)
             {
-                cvt.writeInt32(bank.value, offsetInBank + 0x10 * i, displayList.materialValues[i].highShading);
-                cvt.writeInt32(bank.value, offsetInBank + 0x10 * i + 8, displayList.materialValues[i].lowShading);
+                cvt.writeInt32(bank.value, offsetInBank + 0x20 * i, displayList.lightValues[i].color);
+                cvt.writeInt32(bank.value, offsetInBank + 0x20 * i + 4, displayList.lightValues[i].color);
+                cvt.writeInt32(bank.value, offsetInBank + 0x20 * i + 8, displayList.lightValues[i].direction);
+                cvt.writeInt32(bank.value, offsetInBank + 0x20 * i + 0xC, displayList.lightValues[i].ambient);
+
+
+                cvt.writeInt32(bank.value, offsetInBank + 0x20 * i + 0x10, displayList.lightValues[i].color);
+                cvt.writeInt32(bank.value, offsetInBank + 0x20 * i + 0x14, displayList.lightValues[i].color);
+                cvt.writeInt32(bank.value, offsetInBank + 0x20 * i + 0x18, displayList.lightValues[i].direction);
+                cvt.writeInt32(bank.value, offsetInBank + 0x20 * i + 0x1C, displayList.lightValues[i].ambient);
             }
 
             Array.Copy(bank.value, offsetInBank, EmulationState.instance.ROM, bank.ROMStart + offsetInBank, totalSize);
@@ -196,7 +211,7 @@ namespace SM64ModelImporter
         {
             int cursor = segmentOffset;
             if (displayList != null)
-                cursor += displayList.materialValues.Length * 0x10;
+                cursor += displayList.lightValues.Length * 0x20;
             vertexOffset = cursor - segmentOffset;
             UpdateVertexAndCommands();
         }
@@ -307,6 +322,7 @@ namespace SM64ModelImporter
             block.SetInt("Color Interpretation", (int)conversionSettings.colorInterpretation);
             if (displayList != null)
             {
+                block.SetInt("Cycle Type", (int)displayList.renderstates.cycleType, false);
                 block.SetInt("Blend modes", displayList.renderstates.blendMode);
                 block.SetInt("Render states", displayList.renderstates.otherModesLow);
                 block.SetInt("RCP Set", displayList.renderstates.RCPSet);
@@ -325,7 +341,8 @@ namespace SM64ModelImporter
         public void LoadSettings(FileParser.Block block)
         {
             string oldSource = sourceFileName;
-            sourceFileName = block.GetString("Obj File");
+            sourceFileName = block.GetString("Obj File", false);
+            if (sourceFileName == "") sourceFileName = oldSource;
             conversionSettings.colorInterpretation = (ConversionSettings.ColorInterpretation)block.GetInt("Color Interpretation", false);
             if (sourceFileName != "")
                 LoadObj();
@@ -350,6 +367,7 @@ namespace SM64ModelImporter
 
             if (displayList != null)
             {
+                displayList.renderstates.cycleType = (BlenderControl.CycleModes)block.GetInt("Cycle Type", false);
                 displayList.renderstates.blendMode = block.GetInt("Blend modes");
                 displayList.renderstates.otherModesLow = block.GetInt("Render states");
                 displayList.renderstates.RCPSet = block.GetInt("RCP Set", false);
@@ -361,6 +379,7 @@ namespace SM64ModelImporter
                 renderStateControl.Bind(displayList.renderstates);
                 combinerStateControl.Bind(displayList.renderstates.combiner);
                 blenderControl1.SetValues(displayList.renderstates.blendMode);
+                blenderControl1.SetCycleType(displayList.renderstates.cycleType);
             }
             if (oldSource != sourceFileName)
                 updateImportEnable(null, null);
