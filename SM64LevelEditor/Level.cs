@@ -27,6 +27,7 @@ namespace SM64LevelEditor
         Vector3 initialPosition;
         int initialAngle;
         byte initialUnknown;
+        byte collisionEnvironment;
 
         public static void InitCommands()
         {
@@ -42,6 +43,7 @@ namespace SM64LevelEditor
             LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.SET_MODEL_ID_DISPLAYLIST].Add(SET_MODEL_ID);
             LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.SET_MODEL_ID_GEOLAYOUT].Add(SET_MODEL_ID);
             LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.SET_INITIAL_POSITION].Add(SET_INITIAL_POSITION);
+            LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.DEFINE_COLLISION_ENVIRONMENT].Add(DEFINE_COLLISION_ENVIRONMET);
             LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.BRANCH].Add((byte[] stuff) =>
             {
                 return true;
@@ -144,6 +146,12 @@ namespace SM64LevelEditor
             current.initialUnknown = commandBytes[2];
             current.initialAngle = cvt.int16(commandBytes, 4);
             current.initialPosition = new Vector3(cvt.int16(commandBytes, 6), cvt.int16(commandBytes, 8), cvt.int16(commandBytes, 10));
+            return true;
+        }
+
+        static bool DEFINE_COLLISION_ENVIRONMET(byte[] commandBytes)
+        {
+            current.collisionEnvironment = commandBytes[3];
             return true;
         }
 

@@ -143,13 +143,21 @@ namespace SM64LevelEditor
                 Editor.currentAreaIndex = 0;
                 Editor.currentLevel.MakeVisible(0);
                 Editor.currentLevel.SetAliasFile(Editor.projectSettings.GetBehaviourAliasList(address), Editor.projectSettings.GetModelIDAliasList(address));
+                areaToolStripMenuItem.DropDownItems.Clear();
+                for (int i = 0; i < Editor.currentLevel.areas.Length; i++)
+                    if (Editor.currentLevel.areas[i] != null)
+                    {
+                        int k = i;
+                        var btna = new ToolStripButton("Area " + i.ToString());
+                        btna.Click += (_, __) => Editor.currentAreaIndex = k;
+                        areaToolStripMenuItem.DropDownItems.Add(btna);
+                    }
             }
             catch (Exception ex)
             {
                 EmulationState.messages.AppendMessage("Unable to load level! Exception was:\n" + ex.ToString(), "Error");
                 Editor.currentLevel = null;
             }
-
         }
 
         void UpdateFrame(float time)

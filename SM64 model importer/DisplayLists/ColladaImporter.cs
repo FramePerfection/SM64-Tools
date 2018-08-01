@@ -226,6 +226,7 @@ namespace SM64ModelImporter
                         string fullPath = imageFileName;
                         if (imageFileName[1] != ':') //Path is not absolute. Make Absolute
                             fullPath = System.IO.Path.Combine(rootDirectory, imageFileName);
+                        fullPath = Uri.UnescapeDataString(fullPath);
                         if (!allMaterials.TryGetValue(imageFileName, out meshSubset.Texture))
                             meshSubset.Texture = allMaterials[imageFileName] = new TextureInfo(fullPath);
                     }

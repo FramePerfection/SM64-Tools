@@ -164,7 +164,7 @@ namespace SM64ModelImporter
 
 
             targetList.Add(new DisplayList.Command(0x03, 0x860010, materialOffset + materialIndex * 0x20)); //Light 1
-            targetList.Add(new DisplayList.Command(0x03, 0x880010, materialOffset + materialIndex * 0x20 + 10)); //Light 2
+            targetList.Add(new DisplayList.Command(0x03, 0x880010, materialOffset + materialIndex * 0x20 + 0x10)); //Light 2
         }
 
         public void AppendResetCommands(List<DisplayList.Command> targetList)

@@ -142,8 +142,8 @@ namespace SM64ModelImporter
                 cvt.writeInt32(bank.value, offsetInBank + 0x20 * i + 0xC, displayList.lightValues[i].ambient);
 
 
-                cvt.writeInt32(bank.value, offsetInBank + 0x20 * i + 0x10, displayList.lightValues[i].color);
-                cvt.writeInt32(bank.value, offsetInBank + 0x20 * i + 0x14, displayList.lightValues[i].color);
+                cvt.writeInt32(bank.value, offsetInBank + 0x20 * i + 0x10, 0x7f7f7fFF); //displayList.lightValues[i].color);
+                cvt.writeInt32(bank.value, offsetInBank + 0x20 * i + 0x14, 0x7f7f7fFF); //displayList.lightValues[i].color);
                 cvt.writeInt32(bank.value, offsetInBank + 0x20 * i + 0x18, displayList.lightValues[i].direction);
                 cvt.writeInt32(bank.value, offsetInBank + 0x20 * i + 0x1C, displayList.lightValues[i].ambient);
             }

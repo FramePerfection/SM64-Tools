@@ -52,6 +52,7 @@
             this.logToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.thisLooksProToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.areaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -61,6 +62,7 @@
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
             this.levelToolStripMenuItem,
+            this.areaToolStripMenuItem,
             this.ExportToolStripMenuItem,
             this.viewToolStripMenuItem,
             this.thisLooksProToolStripMenuItem});
@@ -148,7 +150,7 @@
             // 
             this.loadedBanksToolStripMenuItem.Name = "loadedBanksToolStripMenuItem";
             this.loadedBanksToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.loadedBanksToolStripMenuItem.Text = "Loaded banks";
+            this.loadedBanksToolStripMenuItem.Text = "Settings";
             // 
             // ExportToolStripMenuItem
             // 
@@ -241,6 +243,12 @@
             this.helpToolStripMenuItem.Text = "Controls";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
             // 
+            // areaToolStripMenuItem
+            // 
+            this.areaToolStripMenuItem.Name = "areaToolStripMenuItem";
+            this.areaToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
+            this.areaToolStripMenuItem.Text = "Area";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -283,6 +291,7 @@
         private System.Windows.Forms.ToolStripMenuItem RAMBankToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem allToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem backgroundToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem areaToolStripMenuItem;
     }
 }
 

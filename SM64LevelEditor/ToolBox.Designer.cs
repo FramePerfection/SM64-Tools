@@ -31,13 +31,19 @@
             this.cmbLevel = new System.Windows.Forms.ComboBox();
             this.warpControl = new SM64LevelEditor.Controls.WarpControl();
             this.objectControl1 = new SM64LevelEditor.Controls.ObjectControl();
+            this.tabMain = new System.Windows.Forms.TabControl();
+            this.tabObjects = new System.Windows.Forms.TabPage();
+            this.tabSettings = new System.Windows.Forms.TabPage();
+            this.tabMain.SuspendLayout();
+            this.tabObjects.SuspendLayout();
+            this.tabSettings.SuspendLayout();
             this.SuspendLayout();
             // 
             // cmbLevel
             // 
             this.cmbLevel.FormatString = "X";
             this.cmbLevel.FormattingEnabled = true;
-            this.cmbLevel.Location = new System.Drawing.Point(12, 12);
+            this.cmbLevel.Location = new System.Drawing.Point(3, 6);
             this.cmbLevel.Name = "cmbLevel";
             this.cmbLevel.Size = new System.Drawing.Size(204, 21);
             this.cmbLevel.TabIndex = 0;
@@ -45,29 +51,66 @@
             // 
             // warpControl
             // 
-            this.warpControl.Location = new System.Drawing.Point(12, 358);
+            this.warpControl.Location = new System.Drawing.Point(6, 3);
             this.warpControl.Name = "warpControl";
-            this.warpControl.Size = new System.Drawing.Size(204, 192);
+            this.warpControl.Size = new System.Drawing.Size(212, 192);
             this.warpControl.TabIndex = 2;
             // 
             // objectControl1
             // 
-            this.objectControl1.Location = new System.Drawing.Point(12, 39);
+            this.objectControl1.Location = new System.Drawing.Point(3, 33);
             this.objectControl1.Name = "objectControl1";
-            this.objectControl1.Size = new System.Drawing.Size(204, 313);
+            this.objectControl1.Size = new System.Drawing.Size(204, 514);
             this.objectControl1.TabIndex = 1;
+            // 
+            // tabMain
+            // 
+            this.tabMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabMain.Controls.Add(this.tabObjects);
+            this.tabMain.Controls.Add(this.tabSettings);
+            this.tabMain.Location = new System.Drawing.Point(2, 12);
+            this.tabMain.Name = "tabMain";
+            this.tabMain.SelectedIndex = 0;
+            this.tabMain.Size = new System.Drawing.Size(232, 580);
+            this.tabMain.TabIndex = 3;
+            // 
+            // tabObjects
+            // 
+            this.tabObjects.Controls.Add(this.objectControl1);
+            this.tabObjects.Controls.Add(this.cmbLevel);
+            this.tabObjects.Location = new System.Drawing.Point(4, 22);
+            this.tabObjects.Name = "tabObjects";
+            this.tabObjects.Padding = new System.Windows.Forms.Padding(3);
+            this.tabObjects.Size = new System.Drawing.Size(224, 554);
+            this.tabObjects.TabIndex = 0;
+            this.tabObjects.Text = "Objects";
+            this.tabObjects.UseVisualStyleBackColor = true;
+            // 
+            // tabSettings
+            // 
+            this.tabSettings.Controls.Add(this.warpControl);
+            this.tabSettings.Location = new System.Drawing.Point(4, 22);
+            this.tabSettings.Name = "tabSettings";
+            this.tabSettings.Padding = new System.Windows.Forms.Padding(3);
+            this.tabSettings.Size = new System.Drawing.Size(224, 554);
+            this.tabSettings.TabIndex = 1;
+            this.tabSettings.Text = "Area Settings";
+            this.tabSettings.UseVisualStyleBackColor = true;
             // 
             // ToolBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(228, 562);
-            this.Controls.Add(this.warpControl);
-            this.Controls.Add(this.objectControl1);
-            this.Controls.Add(this.cmbLevel);
+            this.ClientSize = new System.Drawing.Size(235, 593);
+            this.Controls.Add(this.tabMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "ToolBox";
             this.Text = "ToolBox";
+            this.tabMain.ResumeLayout(false);
+            this.tabObjects.ResumeLayout(false);
+            this.tabSettings.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -77,5 +120,8 @@
         private System.Windows.Forms.ComboBox cmbLevel;
         public Controls.ObjectControl objectControl1;
         public Controls.WarpControl warpControl;
+        private System.Windows.Forms.TabControl tabMain;
+        private System.Windows.Forms.TabPage tabObjects;
+        private System.Windows.Forms.TabPage tabSettings;
     }
 }

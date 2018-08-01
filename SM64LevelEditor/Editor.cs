@@ -9,8 +9,20 @@ namespace SM64LevelEditor
     public static class Editor
     {
         public static Level currentLevel;
-        public static int currentAreaIndex = -1;
-        public static Area currentArea { get { return currentLevel == null ? null : currentLevel.areas[currentAreaIndex]; } }
+        static int _currentAreaIndex = -1;
+        public static int currentAreaIndex
+        {
+            get { return _currentAreaIndex; }
+            set
+            {
+                if (currentArea != null)
+                    currentArea.MakeInvisible();
+                _currentAreaIndex = value;
+                if (currentArea != null)
+                    currentArea.MakeVisible();
+            }
+        }
+        public static Area currentArea { get { return currentLevel == null || currentAreaIndex < 0 ? null : currentLevel.areas[currentAreaIndex]; } }
         public static Camera camera = new Camera();
 
         public static float mouseSensitivity = 3;

@@ -8,7 +8,7 @@ namespace SM64ModelImporter
     {
         public class Light
         {
-            public int color = (int)-1, ambient = 0x7f7f7fFF;
+            public int color = (int)-1, ambient = 0x3f3f3fFF;
             public int direction = 0x66666600;
         }
 

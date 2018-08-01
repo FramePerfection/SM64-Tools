@@ -64,7 +64,7 @@ namespace SM64ModelImporter
         {
             if (Patch == null) return;
             int type;
-            if (cvt.ParseIntHex(cmbType.Text.Substring(2, 2), out type))
+            if (cmbType.Text.Length >= 4 && cvt.ParseIntHex(cmbType.Text.Substring(2, 2), out type))
                 Patch.type = (short)type;
         }
     }
