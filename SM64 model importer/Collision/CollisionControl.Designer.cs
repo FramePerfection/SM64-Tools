@@ -31,11 +31,12 @@
             this.btnLoadObj = new System.Windows.Forms.Button();
             this.pointerControl1 = new SM64RAM.PointerControl();
             this.groupObject = new System.Windows.Forms.GroupBox();
+            this.specialPointerControl1 = new SM64RAM.SpecialPointerControl();
             this.lblObjFileName = new System.Windows.Forms.Label();
             this.cmbTypeStyle = new System.Windows.Forms.ComboBox();
             this.groupCollisionTypes = new System.Windows.Forms.GroupBox();
             this.panelCollisionTypes = new System.Windows.Forms.Panel();
-            this.specialPointerControl1 = new SM64RAM.SpecialPointerControl();
+            this.btnSpecialCollision = new System.Windows.Forms.Button();
             this.groupObject.SuspendLayout();
             this.groupCollisionTypes.SuspendLayout();
             this.SuspendLayout();
@@ -69,6 +70,13 @@
             this.groupObject.TabIndex = 2;
             this.groupObject.TabStop = false;
             this.groupObject.Text = "Object";
+            // 
+            // specialPointerControl1
+            // 
+            this.specialPointerControl1.Location = new System.Drawing.Point(364, 19);
+            this.specialPointerControl1.Name = "specialPointerControl1";
+            this.specialPointerControl1.Size = new System.Drawing.Size(195, 112);
+            this.specialPointerControl1.TabIndex = 8;
             // 
             // lblObjFileName
             // 
@@ -117,17 +125,21 @@
             this.panelCollisionTypes.Size = new System.Drawing.Size(674, 273);
             this.panelCollisionTypes.TabIndex = 0;
             // 
-            // specialPointerControl1
+            // btnSpecialCollision
             // 
-            this.specialPointerControl1.Location = new System.Drawing.Point(364, 19);
-            this.specialPointerControl1.Name = "specialPointerControl1";
-            this.specialPointerControl1.Size = new System.Drawing.Size(195, 112);
-            this.specialPointerControl1.TabIndex = 8;
+            this.btnSpecialCollision.Location = new System.Drawing.Point(574, 41);
+            this.btnSpecialCollision.Name = "btnSpecialCollision";
+            this.btnSpecialCollision.Size = new System.Drawing.Size(103, 23);
+            this.btnSpecialCollision.TabIndex = 5;
+            this.btnSpecialCollision.Text = "Special Collision";
+            this.btnSpecialCollision.UseVisualStyleBackColor = true;
+            this.btnSpecialCollision.Click += new System.EventHandler(this.btnSpecialCollision_Click);
             // 
             // CollisionControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnSpecialCollision);
             this.Controls.Add(this.groupCollisionTypes);
             this.Controls.Add(this.cmbTypeStyle);
             this.Controls.Add(this.groupObject);
@@ -150,5 +162,6 @@
         private System.Windows.Forms.GroupBox groupCollisionTypes;
         private System.Windows.Forms.Panel panelCollisionTypes;
         private SM64RAM.SpecialPointerControl specialPointerControl1;
+        private System.Windows.Forms.Button btnSpecialCollision;
     }
 }

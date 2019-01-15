@@ -22,8 +22,8 @@ namespace SM64RAM
 
     public class AreaCollisionPointer : SpecialPointer
     {
-        int area = 0;
-        int segmentedAddress = 0;
+        public readonly int area = 0;
+        public readonly int segmentedAddress = 0;
         public AreaCollisionPointer(int area, int segmentedAddress)
         {
             this.area = area;

@@ -21,6 +21,7 @@ namespace SM64ModelImporter
     public class CollisionPatch
     {
         public string name;
+        public System.Drawing.Image materialImage;
         public short type;
         public List<CollisionTriangle> triangles = new List<CollisionTriangle>();
         public CollisionPatch(string name)
@@ -38,9 +39,12 @@ namespace SM64ModelImporter
         }
 
         public static byte[] objectPresets0x43;
+        static System.Drawing.Image failImage = null;
 
         public Vector3[] allVertices = new Vector3[0];
         public List<CollisionPatch> patches = new List<CollisionPatch>();
+        public SpecialBoxes specialBoxes;
+        Dictionary<string, System.Drawing.Image> materials = new Dictionary<string, System.Drawing.Image>();
 
         private static bool hasExtraInformation(short cmdByte)
         {
@@ -154,6 +158,8 @@ namespace SM64ModelImporter
             int length = allVertices.Length * 6 + 8 + patches.Count * 4;
             foreach (CollisionPatch p in patches)
                 length += p.triangles.Count * (hasExtraInformation(p.type) ? 8 : 6);
+            if (specialBoxes != null)
+                length += specialBoxes.GetLength();
             return (length + 3) / 4 * 4;
         }
 
@@ -188,7 +194,10 @@ namespace SM64ModelImporter
                 }
             }
             cvt.writeInt16(stream, cursor, 0x41);
-            cvt.writeInt16(stream, cursor + 2, 0x42);
+            cursor += 2;
+            if (specialBoxes != null)
+                specialBoxes.Save(ref stream, ref cursor);
+            cvt.writeInt16(stream, cursor, 0x42);
             cursor = end;
         }
 
@@ -196,6 +205,31 @@ namespace SM64ModelImporter
         {
             patches.Clear();
             allVertices = new Vector3[0];
+            foreach (var value in materials)
+                value.Value.Dispose();
+            materials.Clear();
+        }
+
+        void CreateMaterialLibrary(string fileName)
+        {
+            using (StreamReader rd = new StreamReader(fileName))
+            {
+                string currentMat = "";
+                while (!rd.EndOfStream)
+                {
+                    string line = rd.ReadLine();
+                    string[] split = line.Split(new char[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                    if (split.Length == 0) continue;
+                    if (split[0] == "newmtl")
+                        currentMat = split[1];
+                    else if (split[0] == "map_Kd")
+                        try
+                        {
+                            materials[currentMat] = System.Drawing.Image.FromFile(split[1]);
+                        }
+                        catch { }
+                }
+            }
         }
 
         public void Import(string fileName, PatchMode mode)
@@ -215,7 +249,14 @@ namespace SM64ModelImporter
             {
                 string line = rd.ReadLine();
                 string[] split = line.Split(' ');
-                if (split[0] == "o") //Object
+                if (split[0] == "mtllib") //Material Library
+                {
+                    string currentDir = Environment.CurrentDirectory;
+                    Environment.CurrentDirectory = System.IO.Path.GetDirectoryName(System.IO.Path.GetFullPath(fileName));
+                    CreateMaterialLibrary(line.Remove(0, split[0].Length).Trim());
+                    Environment.CurrentDirectory = currentDir;
+                }
+                else if (split[0] == "o") //Object
                 {
                     if (mode == PatchMode.ByObject)
                     {
@@ -249,6 +290,8 @@ namespace SM64ModelImporter
                                 goto skipNewPatch;
                             }
                         currentPatch = new CollisionPatch(split[1]);
+                        if (!materials.TryGetValue(split[1], out currentPatch.materialImage))
+                            currentPatch.materialImage = failImage;
                     skipNewPatch: ;
                     }
                 }

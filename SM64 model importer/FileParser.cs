@@ -26,16 +26,18 @@ namespace SM64ModelImporter
                 obj.SaveSettings(this);
             }
 
-            public Block(string fileName) {
+            public Block(string fileName)
+            {
                 this.fileName = fileName;
-                StreamReader reader = new StreamReader(fileName); 
-                Read(reader, true); 
+                StreamReader reader = new StreamReader(fileName);
+                Read(reader, true);
                 reader.Close();
             }
 
-            private Block(StreamReader reader, string fileName) {
+            private Block(StreamReader reader, string fileName)
+            {
                 this.fileName = fileName;
-                Read(reader, false); 
+                Read(reader, false);
             }
 
             private void Read(StreamReader reader, bool isRoot)
@@ -206,7 +208,10 @@ namespace SM64ModelImporter
 
             public void SetString(string name, string value)
             {
-                values[name.Trim()] = "\"" + value.ToString() + "\"";
+                if (value == null)
+                    values[name.Trim()] = "\"\"";
+                else
+                    values[name.Trim()] = "\"" + value.ToString() + "\"";
             }
 
             public void SetIntArray(string name, int[] value, bool hex = true)

@@ -1,6 +1,6 @@
 ROM:= ""
-Patches:= "Set pointers: 0x2AC170 -> 00 10 00 19 02 12 00 00 02 12 20 00 19 00 00 00; Default Level?: 0x2120000 -> File: Default Level.bin, 0x2120004 -> 17 0C 00 0E 02 12 80 00 02 13 00 00, 0x21200AB -> 0F;
-"Run level scripts:= 0x2AC170
+Patches:= "Set pointers: 0x2AC184 -> 00 10 00 19 01 C8 00 00 01 C8 20 00 19 00 00 00; Default Level?: 0x1C80000 -> File: Default Level.bin, 0x1C80004 -> 17 0C 00 0E 01 C8 80 00 01 C9 00 00, 0x1C800AB -> 0F;"
+Run level scripts:= 0x2AC170
 Base Offset:= 0xE000000
 Import Scale:= 0x3E8
 NumDisplayLists:= 4

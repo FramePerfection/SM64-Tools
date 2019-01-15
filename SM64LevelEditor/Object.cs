@@ -9,6 +9,19 @@ namespace SM64LevelEditor
 {
     public class Object
     {
+        public class Box
+        {
+            public Vector3 low, high;
+            public Vector3 size { get { return new Vector3(high.X - low.X, high.Y - low.Y, high.Z - low.Z); } }
+            public Vector3 center { get { return new Vector3(high.X + low.X, high.Y + low.Y, high.Z + low.Z) * 0.5f; } }
+
+            public Box(Vector3 low, Vector3 high)
+            {
+                this.low = low;
+                this.high = high;
+            }
+        }
+
         const float ROTATION_FACTOR = (float)(2 * Math.PI / (360));
         [Browsable(false)]
         public Level level { get; private set; }
@@ -41,6 +54,7 @@ namespace SM64LevelEditor
         public short positionY { get; set; }
         public short positionZ { get; set; }
         static int maxPickIndex = 1;
+        public Box bounds { get; private set; }
 
         byte m_ID;
 
@@ -60,15 +74,20 @@ namespace SM64LevelEditor
             this.acts = acts;
             this.bParam = bParam;
         }
+        public Object(Object obj) : this(obj.level, obj.area, obj.position, obj.rotation, obj.model_ID, obj.behaviourScript, obj.acts, obj.bParam) { }
 
         public void SetModelID(byte ID)
         {
             if (ID == this.m_ID) return;
+            bounds = null;
             this.m_ID = ID;
             GeoLayout preset;
             if (geometry != null) geometry.MakeInvisible(Level.renderer);
             if (Level.modelIDs.TryGetValue((byte)ID, out preset))
             {
+                Vector3 low, high;
+                if (preset.GetBounds(out low, out high))
+                    bounds = new Box(low, high);
                 geometry = preset.DeepCopy();
                 geometry.SetPickIndex(pickIndex);
                 if (area.visible)

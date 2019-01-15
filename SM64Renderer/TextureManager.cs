@@ -60,11 +60,18 @@ namespace SM64Renderer
                 return result;
             Bitmap bmp = null;
             if (info.width == 0) return null;
-            if (info.fmt == (int)TextureFormat.G_IM_FMT_RGBA)
-                if (info.bpp == (int)BitsPerPixel.G_IM_SIZ_16b)
-                    bmp = ImageConverter.ReadRGBA16(state.banks[info.segmentedPointer >> 0x18].value, info.segmentedPointer & 0xFFFFFF, info.width, info.height);
-                else if (info.bpp == (int)BitsPerPixel.G_IM_SIZ_32b)
-                    bmp = ImageConverter.ReadRGBA32(state.banks[info.segmentedPointer >> 0x18].value, info.segmentedPointer & 0xFFFFFF, info.width, info.height);
+            try
+            {
+                if (info.fmt == (int)TextureFormat.G_IM_FMT_RGBA)
+                    if (info.bpp == (int)BitsPerPixel.G_IM_SIZ_16b)
+                        bmp = ImageConverter.ReadRGBA16(state.banks[info.segmentedPointer >> 0x18].value, info.segmentedPointer & 0xFFFFFF, info.width, info.height);
+                    else if (info.bpp == (int)BitsPerPixel.G_IM_SIZ_32b)
+                        bmp = ImageConverter.ReadRGBA32(state.banks[info.segmentedPointer >> 0x18].value, info.segmentedPointer & 0xFFFFFF, info.width, info.height);
+            }
+            catch (Exception ex)
+            {
+                ;
+            }
             if (bmp == null) return null;
             Texture newTex = new Texture(device, bmp, Usage.None, Pool.Managed);
             textures[info] = newTex;

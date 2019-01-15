@@ -64,8 +64,12 @@ namespace SM64RAM
         static Stack<int> returnAddresses = new Stack<int>();
         static Stack<int> recordedJumps = new Stack<int>();
         static string log = "";
-        public static int cursorPosition { get { 
-            return currentBankIndex == -1 ? cursor : (currentBankIndex << 0x18) | cursor; } 
+        public static int cursorPosition
+        {
+            get
+            {
+                return currentBankIndex == -1 ? cursor : (currentBankIndex << 0x18) | cursor;
+            }
         }
 
         static LevelScriptReader()
@@ -123,6 +127,12 @@ namespace SM64RAM
             ReadAmount(EmulationState.instance.ROM, end == -1 ? -1 : end - startPosition);
         }
 
+        public static void ReadFromSegmented(int segmentedAddress, int amount = -1)
+        {
+            cursor = segmentedAddress & 0xFFFFFF;
+            ReadAmount(EmulationState.instance.banks[(byte)(segmentedAddress >> 0x18)].value, amount);
+        }
+
         static void ReadAmount(byte[] currentBank, int amount = -1)
         {
             foreach (int recordedJump in recordedJumps)
@@ -154,7 +164,11 @@ namespace SM64RAM
                 List<LevelScriptCommandExecutor> exec;
                 if (executors.TryGetValue(cmd, out exec))
                     foreach (LevelScriptCommandExecutor ack in exec)
+                    {
                         _continue &= ack(commandBytes);
+                        if (!_continue)
+                            EmulationState.messages.AppendMessage("Levelscript reading was terminated at " + currentBankIndex.ToString("X2") + cursor.ToString("X6") + " by " + ack.Method.Name + ".", "Warning");
+                    }
                 else
                 {
                     EmulationState.messages.AppendMessage("Encountered unknown command 0x" + cmd.ToString("X") + " with length " + cmdLen.ToString() + " at 0x" + cursor.ToString("X") + " in bank 0x" + currentBankIndex.ToString("X") + ".", "Error");

@@ -10,7 +10,7 @@ namespace SM64LevelEditor
     {
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
-            return sourceType == typeof(string) ? true :  base.CanConvertFrom(context, sourceType);
+            return sourceType == typeof(string) ? true : base.CanConvertFrom(context, sourceType);
         }
 
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
@@ -33,10 +33,17 @@ namespace SM64LevelEditor
                 string input = (string)value;
                 if (input.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
                     input = input.Substring(2);
-                MethodInfo meth = typeof(T).GetMethod("Parse", new Type[] {typeof(string), typeof(System.Globalization.NumberStyles), typeof(IFormatProvider)});
+                MethodInfo meth = typeof(T).GetMethod("Parse", new Type[] { typeof(string), typeof(System.Globalization.NumberStyles), typeof(IFormatProvider) });
                 if (meth == null || !meth.IsStatic)
                     return base.ConvertFrom(context, culture, value);
-                return meth.Invoke(null, new object[] {input, System.Globalization.NumberStyles.HexNumber, culture});
+                try
+                {
+                    return meth.Invoke(null, new object[] { input, System.Globalization.NumberStyles.HexNumber, culture });
+                }
+                catch
+                {
+                    return null;
+                }
             }
             else
                 return base.ConvertFrom(context, culture, value);

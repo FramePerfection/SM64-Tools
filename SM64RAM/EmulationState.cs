@@ -99,7 +99,7 @@ namespace SM64RAM
                 if ((value & 0xFFFFFF) > banks[segment].value.Length - length)
                 {
                     if (showError)
-                        messages.AppendMessage("Bank 0x" + segment.ToString("X") + " is too short.\nBank length was " + banks[segment].value.Length + ", but requested length was " + (value + length).ToString("X") + ".", "Error");
+                        messages.AppendMessage("Bank 0x" + segment.ToString("X") + " is too short.\nBank length was 0x" + banks[segment].value.Length.ToString("X") + ", but requested length was 0x" + ((value & 0xFFFFFF) + length).ToString("X") + ".", "Error");
                     return false;
                 }
             return true;

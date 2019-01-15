@@ -19,6 +19,8 @@ namespace SM64LevelEditor
     {
         ToolBox toolBox;
         LogWindow logWindow;
+        LevelSettingsDialog levelSettings;
+        ModelBrowser modelBrowser;
 
         public DeviceWrapper device;
         TextureManager globalTextures;
@@ -114,8 +116,11 @@ namespace SM64LevelEditor
 
             toolBox = new ToolBox(this);
             toolBox.Show();
+            modelBrowser = new ModelBrowser(device);
 
             logWindow = new LogWindow();
+            levelSettings = new LevelSettingsDialog();
+
             EmulationState.messages = logWindow;
 
             openToolStripMenuItem_Click(null, null);
@@ -141,7 +146,7 @@ namespace SM64LevelEditor
             {
                 Editor.currentLevel = Level.LoadLevelROM(address);
                 Editor.currentAreaIndex = 0;
-                Editor.currentLevel.MakeVisible(0);
+                UpdateLayerViewList();
                 Editor.currentLevel.SetAliasFile(Editor.projectSettings.GetBehaviourAliasList(address), Editor.projectSettings.GetModelIDAliasList(address));
                 areaToolStripMenuItem.DropDownItems.Clear();
                 for (int i = 0; i < Editor.currentLevel.areas.Length; i++)
@@ -149,7 +154,11 @@ namespace SM64LevelEditor
                     {
                         int k = i;
                         var btna = new ToolStripButton("Area " + i.ToString());
-                        btna.Click += (_, __) => Editor.currentAreaIndex = k;
+                        btna.Click += (_, __) =>
+                        {
+                            Editor.currentAreaIndex = k;
+                            UpdateLayerViewList();
+                        };
                         areaToolStripMenuItem.DropDownItems.Add(btna);
                     }
             }
@@ -158,6 +167,19 @@ namespace SM64LevelEditor
                 EmulationState.messages.AppendMessage("Unable to load level! Exception was:\n" + ex.ToString(), "Error");
                 Editor.currentLevel = null;
             }
+        }
+
+        void UpdateLayerViewList()
+        {
+            showHideLayersToolStripMenuItem.DropDownItems.Clear();
+            for (int i = 0; i < Level.renderer.layers.Length; i++)
+                if (Level.renderer.layers[i].Count > 0)
+                {
+                    var btna = new ToolStripButton("Layer " + i.ToString("X2"));
+                    int t = i;
+                    btna.Click += (_, __) => Level.renderer.hideLayers[t] = !Level.renderer.hideLayers[t];
+                    showHideLayersToolStripMenuItem.DropDownItems.Add(btna);
+                }
         }
 
         void UpdateFrame(float time)
@@ -172,12 +194,13 @@ namespace SM64LevelEditor
         void DrawFrame()
         {
             device.device.Present();
+            modelBrowser.Render();
             if (Editor.currentLevel != null)
                 Level.renderer.RenderFrame();
             device.device.BeginScene();
             if (Editor.currentArea != null)
                 foreach (Object obj in Editor.currentArea)
-                    Level.renderer.DrawBoudingBox(DX.Matrix.Scaling(100, 100, 100) * obj.GetTransform(), obj.GetBoundingBoxColor());
+                    Level.renderer.DrawBoudingBox((obj.bounds == null ? DX.Matrix.Scaling(100, 100, 100) : DX.Matrix.Scaling(obj.bounds.size * 0.5f) * DX.Matrix.Translation(obj.bounds.center)) * obj.GetTransform(), obj.GetBoundingBoxColor());
 
             device.device.RenderState.ZBufferWriteEnable = false;
             Level.renderer.DrawAxis(DX.Matrix.Scaling(100, 100, 100) * DX.Matrix.Translation(Editor.camera.cursor));
@@ -186,7 +209,7 @@ namespace SM64LevelEditor
 
             if (Editor.currentArea != null)
                 foreach (Object obj in Editor.currentArea)
-                    if (obj.geometry == null)
+                    if (obj.geometry == null || obj.bounds == null)
                         Level.renderer.FillPickingBox(DX.Matrix.Scaling(100, 100, 100) * obj.GetTransform(), obj.pickIndex);
 
             device.device.EndScene();
@@ -249,6 +272,25 @@ namespace SM64LevelEditor
                 logWindow.Show();
             else
                 logWindow.Hide();
+        }
+
+        private void modelBrowserToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            modelBrowserToolStripMenuItem.Checked = !modelBrowserToolStripMenuItem.Checked;
+            if (modelBrowserToolStripMenuItem.Checked)
+                modelBrowser.Show();
+            else
+                modelBrowser.Hide();
+        }
+
+        private void loadedBanksToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            levelSettings.ShowDialog();
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Editor.Undo();
         }
 
         private void RAMBankToolStripMenuItem_MouseEnter(object sender, EventArgs e)

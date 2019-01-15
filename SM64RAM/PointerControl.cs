@@ -12,7 +12,7 @@ namespace SM64RAM
     {
         List<int> RAM_pointers = new List<int>();
         List<int> ROM_pointers = new List<int>();
-        public EventHandler ValueChanged = new EventHandler((_, __) => {});
+        public EventHandler ValueChanged = new EventHandler((_, __) => { });
 
         public PointerControl()
         {
@@ -102,7 +102,7 @@ namespace SM64RAM
                 if (EmulationState.instance.AssertWrite(ptr, 4))
                     Array.Copy(ptrValue, 0, EmulationState.instance.ROM, EmulationState.instance.banks[ptr >> 0x18].ROMStart + (ptr & 0xFFFFFF), 4);
             foreach (int ptr in ROM_pointers)
-                if (EmulationState.instance.AssertWrite(ptr, 4))
+                if (EmulationState.instance.ROM.Length >= ptr + 4)
                     Array.Copy(ptrValue, 0, EmulationState.instance.ROM, ptr, 4);
         }
     }

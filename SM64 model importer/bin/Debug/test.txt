@@ -1,9 +1,0 @@
-func main {
-usedByMain();
-G_SPNOOP();
-G_MTX(G_MTX_PROJECTION, 0x0E000000);
-}
-
-func usedByMain {
-G_RDPTILESYNC();
-}

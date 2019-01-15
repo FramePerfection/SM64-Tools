@@ -14,7 +14,15 @@ namespace SM64RAM
 
         public static uint uint32(byte[] bytes, int offset)
         {
-            return (uint)(bytes[offset] << 0x18 | bytes[offset + 1] << 0x10 | bytes[offset + 2] << 0x8 | bytes[offset + 3]);
+            try
+            {
+
+                return (uint)(bytes[offset] << 0x18 | bytes[offset + 1] << 0x10 | bytes[offset + 2] << 0x8 | bytes[offset + 3]);
+            }
+            catch {
+                ;
+            }
+            return 0;
         }
 
         public static short int16(byte[] bytes, int offset)

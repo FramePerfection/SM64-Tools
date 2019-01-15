@@ -60,7 +60,7 @@ namespace SM64Renderer
                     cmd(reader, currentCommand);
                 else
                     log.Append("Skipped command " + Enum.GetName(typeof(GBI), commandByte) + " - " + currentCommand.ToString("X16") + "\n");
-                
+
                 reader.cursor += 8;
             } while (!reader.terminated);
 

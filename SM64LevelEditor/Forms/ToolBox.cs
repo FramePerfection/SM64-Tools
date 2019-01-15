@@ -61,5 +61,14 @@ namespace SM64LevelEditor
             if (cmbLevel.SelectedIndex >= 0 && cmbLevel.SelectedIndex < levelAddresses.Length)
                 main.LoadLevel(levelAddresses[cmbLevel.SelectedIndex]);
         }
+
+        private void txtMusic_TextChanged(object sender, EventArgs e)
+        {
+            int v;
+            if (int.TryParse(txtMusic.Text, out v))
+                Editor.currentArea.musicSequence = v;
+            else
+                Editor.currentArea.musicSequence = -1;
+        }
     }
 }

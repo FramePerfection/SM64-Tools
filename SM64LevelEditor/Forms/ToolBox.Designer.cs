@@ -34,6 +34,8 @@
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabObjects = new System.Windows.Forms.TabPage();
             this.tabSettings = new System.Windows.Forms.TabPage();
+            this.txtMusic = new System.Windows.Forms.TextBox();
+            this.lblMusic = new System.Windows.Forms.Label();
             this.tabMain.SuspendLayout();
             this.tabObjects.SuspendLayout();
             this.tabSettings.SuspendLayout();
@@ -90,6 +92,8 @@
             // 
             // tabSettings
             // 
+            this.tabSettings.Controls.Add(this.lblMusic);
+            this.tabSettings.Controls.Add(this.txtMusic);
             this.tabSettings.Controls.Add(this.warpControl);
             this.tabSettings.Location = new System.Drawing.Point(4, 22);
             this.tabSettings.Name = "tabSettings";
@@ -98,6 +102,23 @@
             this.tabSettings.TabIndex = 1;
             this.tabSettings.Text = "Area Settings";
             this.tabSettings.UseVisualStyleBackColor = true;
+            // 
+            // txtMusic
+            // 
+            this.txtMusic.Location = new System.Drawing.Point(146, 201);
+            this.txtMusic.Name = "txtMusic";
+            this.txtMusic.Size = new System.Drawing.Size(71, 20);
+            this.txtMusic.TabIndex = 3;
+            this.txtMusic.TextChanged += new System.EventHandler(this.txtMusic_TextChanged);
+            // 
+            // lblMusic
+            // 
+            this.lblMusic.AutoSize = true;
+            this.lblMusic.Location = new System.Drawing.Point(6, 204);
+            this.lblMusic.Name = "lblMusic";
+            this.lblMusic.Size = new System.Drawing.Size(130, 13);
+            this.lblMusic.TabIndex = 4;
+            this.lblMusic.Text = "Music Sequence Number:";
             // 
             // ToolBox
             // 
@@ -111,6 +132,7 @@
             this.tabMain.ResumeLayout(false);
             this.tabObjects.ResumeLayout(false);
             this.tabSettings.ResumeLayout(false);
+            this.tabSettings.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -123,5 +145,7 @@
         private System.Windows.Forms.TabControl tabMain;
         private System.Windows.Forms.TabPage tabObjects;
         private System.Windows.Forms.TabPage tabSettings;
+        private System.Windows.Forms.Label lblMusic;
+        private System.Windows.Forms.TextBox txtMusic;
     }
 }

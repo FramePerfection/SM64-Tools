@@ -30,3 +30,5 @@ C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64LevelEdito
 C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64LevelEditor\obj\x86\Debug\SM64LevelEditor.csproj.GenerateResource.Cache
 C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64LevelEditor\obj\x86\Debug\SM64LevelEditor.LogWindow.resources
 C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64LevelEditor\obj\x86\Debug\SM64LevelEditor.BackgroundDialog.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64LevelEditor\obj\x86\Debug\SM64LevelEditor.LevelSettingsDialog.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64LevelEditor\obj\x86\Debug\SM64LevelEditor.ModelBrowser.resources

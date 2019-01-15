@@ -59,7 +59,9 @@ namespace SM64ModelImporter
             dlg.Filter = "Wavefront objet files (*.obj)|*.obj|Collada files (*.dae)|*.dae";
             if (dlg.ShowDialog() != DialogResult.OK) return;
             sourceFileName = dlg.FileName;
-            LoadObj();
+            string messages = LoadObj();
+            if (messages != null)
+                EmulationState.messages.AppendMessage(messages, "Info");
             displayList.renderstates.blendMode = blenderControl1.GetValues();
             updateImportEnable(null, null);
         }
@@ -111,7 +113,7 @@ namespace SM64ModelImporter
                 LoadObj();
                 LoadSettings(old_settings);
             }
-            catch
+            catch (Exception ex)
             {
                 return -1;
             }
@@ -165,7 +167,7 @@ namespace SM64ModelImporter
             return segmentOffset + totalSize;
         }
 
-        void LoadObj()
+        string LoadObj()
         {
 #if !DEBUG
             try
@@ -190,21 +192,17 @@ namespace SM64ModelImporter
             {
                 StringBuilder lolol = new StringBuilder();
                 for (int i = 0; i < messages.Length; i++)
-                {
-                    lolol.Append(messages[i]);
-                    if (i < messages.Length - 1)
-                        lolol.Append("\n");
-                }
-                EmulationState.messages.AppendMessage(lolol.ToString(), "Info");
+                    lolol.AppendLine(messages[i]);
+                return lolol.ToString();
             }
 #if !DEBUG
             }
             catch
             {
                 lblObjFileName.Text = "<Error>";
-
             }
 #endif
+            return null;
         }
 
         void UpdateAll()

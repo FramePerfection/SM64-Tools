@@ -23,7 +23,10 @@ namespace SM64LevelEditor
         public int segmentedPointer { get; private set; }
         public Area[] areas = new Area[0];
         Dictionary<byte, int> levelGeos = new Dictionary<byte, int>();
+        List<int> levelGeoJumps = new List<int>();
         public List<BankDescription> loadedBanks = new List<BankDescription>();
+        bool recordingLevelGeos = true, recordingGeoJumps = false;
+
         Vector3 initialPosition;
         int initialAngle;
         byte initialUnknown;
@@ -44,8 +47,21 @@ namespace SM64LevelEditor
             LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.SET_MODEL_ID_GEOLAYOUT].Add(SET_MODEL_ID);
             LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.SET_INITIAL_POSITION].Add(SET_INITIAL_POSITION);
             LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.DEFINE_COLLISION_ENVIRONMENT].Add(DEFINE_COLLISION_ENVIRONMET);
+            LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.LOAD_MARIO].Add((byte[] stuff) => current.recordingGeoJumps = true);
             LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.BRANCH].Add((byte[] stuff) =>
             {
+                if (current != null)
+                {
+                    if (current.recordingGeoJumps)
+                        current.levelGeoJumps.Add(cvt.int32(stuff, 4));
+                    current.recordingLevelGeos = false;
+                }
+                return true;
+            });
+            LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.BRANCH_RETURN].Add((byte[] stuff) =>
+            {
+                if (current != null)
+                    current.recordingLevelGeos = true;
                 return true;
             });
         }
@@ -59,7 +75,6 @@ namespace SM64LevelEditor
             current = null;
             return output;
         }
-
 
         #region Level Script Implementations
 
@@ -80,6 +95,7 @@ namespace SM64LevelEditor
         static bool START_AREA(byte[] commandBytes)
         {
             if (current == null) return false;
+            current.recordingGeoJumps = false;
 
             int index = commandBytes[2];
             if (index > current.areas.Length)
@@ -114,14 +130,22 @@ namespace SM64LevelEditor
 
         static bool SET_MODEL_ID(byte[] commandBytes)
         {
-            if (commandBytes[0] == 0x21) return true;
-            int address = cvt.int32(commandBytes, 4);
-            GeoLayout lol = GeoLayout.LoadSegmented(address);
-            if (lol != null)
-                Level.modelIDs[commandBytes[3]] = lol;
-            if (current != null)
-                current.levelGeos[commandBytes[3]] = address;
-            return true;
+            try
+            {
+                if (commandBytes[0] == 0x21) return true;
+                int address = cvt.int32(commandBytes, 4);
+                GeoLayout lol = GeoLayout.LoadSegmented(address);
+                if (lol != null)
+                    Level.modelIDs[commandBytes[3]] = lol;
+                if (current != null && current.recordingLevelGeos)
+                    current.levelGeos[commandBytes[3]] = address;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ;
+            }
+            return false;
         }
 
         static bool PLACE_OBJECT(byte[] commandBytes)
@@ -155,6 +179,12 @@ namespace SM64LevelEditor
             return true;
         }
 
+        static bool SET_MUSIC(byte[] commandBytes)
+        {
+            current.areas[currentArea].musicSequence = cvt.int16(commandBytes, 4);
+            return true;
+        }
+
         #endregion
 
         public Level()
@@ -177,11 +207,63 @@ namespace SM64LevelEditor
             areas[area].MakeVisible();
         }
 
+        public void ReadJump(byte[] jumpCommand)
+        {
+            recordingLevelGeos = false;
+            int jumpAddress = cvt.int32(jumpCommand, 4);
+            levelGeoJumps.Add(jumpAddress);
+            current = this;
+            LevelScriptReader.ReadFromSegmented(jumpAddress);
+            current = null;
+            recordingLevelGeos = true;
+        }
+
+        public void AddLevelGeo(byte id, GeoLayout layout)
+        {
+            levelGeos[id] = layout.segmentedPointer;
+            Level.modelIDs[id] = layout;
+        }
+
+        public void CleanLevelGeos()
+        {
+            Dictionary<byte, int> newGeo = new Dictionary<byte, int>(levelGeos);
+            levelGeos.Clear();
+
+            current = this;
+            foreach (int jumpAddress in levelGeoJumps)
+                LevelScriptReader.ReadFromSegmented(jumpAddress);
+            current = null;
+
+            foreach (var jumpGeoLayout in levelGeos)
+                newGeo.Remove(jumpGeoLayout.Key);
+            levelGeos.Clear();
+
+            foreach (var layout in newGeo)
+            {
+                try
+                {
+                    GeoLayout.LoadSegmented(layout.Value);
+                    levelGeos[layout.Key] = layout.Value;
+                }
+                catch
+                {
+                    //Geo layout could not be loaded, thus should not be added to the levels geo layout list.
+                }
+            }
+            levelGeos = newGeo;
+            foreach (Area area in areas)
+                foreach (Object obj in area)
+                {
+                    byte id = obj.model_ID;
+                    obj.SetModelID(0);
+                    obj.SetModelID(id);
+                }
+        }
+
         public void CreateCommands(int segmentedPointer)
         {
             if (!EmulationState.instance.AssertWrite(segmentedPointer, 4)) return;
             byte[] bank = EmulationState.instance.banks[segmentedPointer >> 0x18].value;
-            System.Windows.Forms.MessageBox.Show(EmulationState.instance.banks[segmentedPointer >> 0x18].ROMStart.ToString("X8"));
             int cursor = segmentedPointer & 0xFFFFFF;
             WriteCommand(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.START_LOADING_SEQUENCE);
             foreach (BankDescription loadedBank in loadedBanks)
@@ -192,8 +274,13 @@ namespace SM64LevelEditor
             }
             WriteCommand(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.END_LOADING_SEQUENCE);
             WriteCommand(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.LOAD_MARIO, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x13, 0x00, 0x2E, 0xC0);
-            foreach (KeyValuePair<byte, int> acken in levelGeos)
-                WriteCommandWords(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.SET_MODEL_ID_GEOLAYOUT, acken.Key, acken.Value);
+            foreach (var geo in levelGeos)
+                WriteCommandWords(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.SET_MODEL_ID_GEOLAYOUT, geo.Key, geo.Value);
+            foreach (int geoJump in levelGeoJumps)
+                WriteCommandWords(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.BRANCH, 0, geoJump);
+
+            //foreach (KeyValuePair<byte, int> acken in levelGeos)
+            //    WriteCommandWords(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.SET_MODEL_ID_GEOLAYOUT, acken.Key, acken.Value);
             for (int i = 0; i < areas.Length; i++)
             {
                 if (areas[i] == null) continue;
@@ -203,6 +290,8 @@ namespace SM64LevelEditor
                     WriteCommand(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.PLACE_OBJECT, obj.GetParameterBytes());
                 foreach (Warp warp in areas[i].warps)
                     WriteCommand(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.CONNECT_WARPS, warp.sourceID, warp.destinationLevel, warp.destinationArea, warp.destinationID);
+                if (areas[i].musicSequence != -1)
+                    WriteCommandWords(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.SET_MUSIC, 0, areas[i].musicSequence << 0x10);
                 WriteCommand(ref cursor, bank, LEVEL_SCRIPT_COMMANDS.END_AREA);
             }
 

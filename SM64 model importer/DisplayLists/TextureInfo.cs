@@ -125,7 +125,6 @@ namespace SM64ModelImporter
             int actualBpp = 4 << (int)usedBpp;
 
             int tile  = 0;
-            int pallete = 0;
             int tmemOffset = 0;
             bool ignoreShift = states.RCP_TexGen == RenderStates.RCP_OP.set ||  states.RCP_TexGenLinear == RenderStates.RCP_OP.set;
             int shiftParamS = ignoreShift ? 0 : (16 - shiftS);

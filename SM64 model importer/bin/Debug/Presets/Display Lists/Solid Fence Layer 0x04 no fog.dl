@@ -1,11 +1,10 @@
 Use Custom Address:= False
 ROM Pointers:= 
-RAM Pointers:= 0x1900107C, 0x1900106C
+RAM Pointers:= 
 Layer:= 0x4
 Environment Color:= 0xFFFFFFFF
 Fog Color:= 0x1
 Fog Intensity:= 0x1
-Obj File:= "Demo Level\demo level fence.obj"
 Color Interpretation:= 0x0
 Cycle Type:= -1
 Blend modes:= 0xC811

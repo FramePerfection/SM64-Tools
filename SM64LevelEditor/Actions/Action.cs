@@ -77,8 +77,15 @@ namespace SM64LevelEditor
     [ActionKey(true, Keys.A)]
     public class SelectAllAction : Action
     {
-        public SelectAllAction()        {            Editor.currentArea.SelectAll();      }
-        public override void Undo() { }
+        public SelectAllAction() { Editor.currentArea.SelectAll(); }
+        public override void Undo() { Editor.currentArea.SetSelection(objects); }
         public override void Update() { }
+    }
+    [ActionKey(true, false, Keys.Z)]
+    public class UndoAction : Action
+    {
+        public UndoAction() { Editor.Undo(); }
+        public override void Undo() { throw new NotSupportedException(); }
+        public override void Update() { throw new NotSupportedException(); }
     }
 }

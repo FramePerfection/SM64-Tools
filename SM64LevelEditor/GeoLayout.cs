@@ -43,7 +43,8 @@ namespace SM64LevelEditor
             public void MakeVisible(Renderer renderer)
             {
                 foreach (Renderer.DisplayListEntry entry in dls)
-                    renderer.layers[entry.layer].Add(entry);
+                    if (!renderer.layers[entry.layer].Contains(entry))
+                        renderer.layers[entry.layer].Add(entry);
                 foreach (Node child in children)
                     child.MakeVisible(renderer);
             }
@@ -83,6 +84,28 @@ namespace SM64LevelEditor
                     child.SetPickIndex(index);
             }
 
+            public bool GetBounds(ref Microsoft.DirectX.Vector3 low, ref Microsoft.DirectX.Vector3 high)
+            {
+                bool result = false;
+                foreach (Node n in children)
+                    result |= n.GetBounds(ref low, ref high);
+                foreach (var dl in dls)
+                {
+                    Microsoft.DirectX.Vector3[] vertices = dl.dl.GetVertexPositions();
+                    foreach (Microsoft.DirectX.Vector3 vertex in vertices)
+                    {
+                        low.X = Math.Min(vertex.X, low.X);
+                        low.Y = Math.Min(vertex.Y, low.Y);
+                        low.Z = Math.Min(vertex.Z, low.Z);
+                        high.X = Math.Max(vertex.X, high.X);
+                        high.Y = Math.Max(vertex.Y, high.Y);
+                        high.Z = Math.Max(vertex.Z, high.Z);
+                    }
+                    result = true;
+                }
+                return result;
+            }
+
             public Matrix GetGlobalTransform() { return parent == null ? localTransform : localTransform * parent.GetGlobalTransform(); }
 
             public void Export(StreamWriter wr, string objectName, float scale, ref int vertexOffset)
@@ -108,10 +131,6 @@ namespace SM64LevelEditor
         static GeoLayout current;
         static Node currentNode;
         static bool validGeoLayout = false;
-
-        public int segmentedPointer { get; private set; }
-        Node root;
-
 
         static GeoLayout()
         {
@@ -181,6 +200,9 @@ namespace SM64LevelEditor
             return true;
         }
 
+        public int segmentedPointer { get; private set; }
+        Node root;
+
         public void Export(string filename)
         {
             string objectName = Path.GetFileNameWithoutExtension(filename);
@@ -196,6 +218,12 @@ namespace SM64LevelEditor
             wr = new StreamWriter(materialDirectory + ".mtl");
             root.ExportMaterials(wr, path, materialDirectory);
             wr.Close();
+        }
+
+        public bool GetBounds(out Microsoft.DirectX.Vector3 low, out Microsoft.DirectX.Vector3 high)
+        {
+            low = high = new Microsoft.DirectX.Vector3();
+            return root.GetBounds(ref low, ref high);
         }
 
         public void MakeVisible(Renderer renderer)

@@ -40,6 +40,7 @@
             this.backgroundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.musicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadedBanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.areaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.currentAreaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectedModelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,9 +51,10 @@
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolBoxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.modelBrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.thisLooksProToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.areaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showHideLayersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -116,6 +118,7 @@
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             this.undoToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.undoToolStripMenuItem.Text = "Undo";
+            this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
             // 
             // redoToolStripMenuItem
             // 
@@ -136,21 +139,28 @@
             // backgroundToolStripMenuItem
             // 
             this.backgroundToolStripMenuItem.Name = "backgroundToolStripMenuItem";
-            this.backgroundToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.backgroundToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.backgroundToolStripMenuItem.Text = "Background";
             this.backgroundToolStripMenuItem.Click += new System.EventHandler(this.backgroundToolStripMenuItem_Click);
             // 
             // musicToolStripMenuItem
             // 
             this.musicToolStripMenuItem.Name = "musicToolStripMenuItem";
-            this.musicToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.musicToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.musicToolStripMenuItem.Text = "Music";
             // 
             // loadedBanksToolStripMenuItem
             // 
             this.loadedBanksToolStripMenuItem.Name = "loadedBanksToolStripMenuItem";
-            this.loadedBanksToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.loadedBanksToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.loadedBanksToolStripMenuItem.Text = "Settings";
+            this.loadedBanksToolStripMenuItem.Click += new System.EventHandler(this.loadedBanksToolStripMenuItem_Click);
+            // 
+            // areaToolStripMenuItem
+            // 
+            this.areaToolStripMenuItem.Name = "areaToolStripMenuItem";
+            this.areaToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
+            this.areaToolStripMenuItem.Text = "Area";
             // 
             // ExportToolStripMenuItem
             // 
@@ -210,7 +220,9 @@
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolBoxToolStripMenuItem,
-            this.logToolStripMenuItem});
+            this.logToolStripMenuItem,
+            this.modelBrowserToolStripMenuItem,
+            this.showHideLayersToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -220,16 +232,23 @@
             this.toolBoxToolStripMenuItem.Checked = true;
             this.toolBoxToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolBoxToolStripMenuItem.Name = "toolBoxToolStripMenuItem";
-            this.toolBoxToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.toolBoxToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.toolBoxToolStripMenuItem.Text = "Tool Box";
             this.toolBoxToolStripMenuItem.Click += new System.EventHandler(this.toolBoxToolStripMenuItem_Click);
             // 
             // logToolStripMenuItem
             // 
             this.logToolStripMenuItem.Name = "logToolStripMenuItem";
-            this.logToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.logToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.logToolStripMenuItem.Text = "Log";
             this.logToolStripMenuItem.Click += new System.EventHandler(this.historyToolStripMenuItem_Click);
+            // 
+            // modelBrowserToolStripMenuItem
+            // 
+            this.modelBrowserToolStripMenuItem.Name = "modelBrowserToolStripMenuItem";
+            this.modelBrowserToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.modelBrowserToolStripMenuItem.Text = "Model Browser";
+            this.modelBrowserToolStripMenuItem.Click += new System.EventHandler(this.modelBrowserToolStripMenuItem_Click);
             // 
             // thisLooksProToolStripMenuItem
             // 
@@ -243,11 +262,11 @@
             this.helpToolStripMenuItem.Text = "Controls";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
             // 
-            // areaToolStripMenuItem
+            // showHideLayersToolStripMenuItem
             // 
-            this.areaToolStripMenuItem.Name = "areaToolStripMenuItem";
-            this.areaToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
-            this.areaToolStripMenuItem.Text = "Area";
+            this.showHideLayersToolStripMenuItem.Name = "showHideLayersToolStripMenuItem";
+            this.showHideLayersToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.showHideLayersToolStripMenuItem.Text = "Show/Hide Layers";
             // 
             // Main
             // 
@@ -292,6 +311,8 @@
         private System.Windows.Forms.ToolStripMenuItem allToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem backgroundToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem areaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem modelBrowserToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showHideLayersToolStripMenuItem;
     }
 }
 

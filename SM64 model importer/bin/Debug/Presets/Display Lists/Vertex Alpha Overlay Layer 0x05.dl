@@ -1,6 +1,6 @@
 Use Custom Address:= False
 ROM Pointers:= 
-RAM Pointers:= 0x1900106C
+RAM Pointers:= 
 Layer:= 0x5
 Environment Color:= 0xFFFFFFFF
 Fog Color:= 0x1

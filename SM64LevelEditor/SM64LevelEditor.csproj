@@ -51,13 +51,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\Action.cs" />
+    <Compile Include="Actions\DuplicateAction.cs" />
     <Compile Include="Actions\TransformActions.cs" />
     <Compile Include="Alias.cs" />
     <Compile Include="Area.cs" />
-    <Compile Include="BackgroundDialog.cs">
+    <Compile Include="Forms\BackgroundDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BackgroundDialog.Designer.cs">
+    <Compile Include="Forms\BackgroundDialog.Designer.cs">
       <DependentUpon>BackgroundDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="BankDescription.cs" />
@@ -75,18 +76,30 @@
       <DependentUpon>WarpControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor.cs" />
+    <Compile Include="Forms\LevelSettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LevelSettingsDialog.Designer.cs">
+      <DependentUpon>LevelSettingsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ModelBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ModelBrowser.Designer.cs">
+      <DependentUpon>ModelBrowser.cs</DependentUpon>
+    </Compile>
     <Compile Include="GeoLayout.cs" />
     <Compile Include="HexTo.cs" />
-    <Compile Include="LogWindow.cs">
+    <Compile Include="Forms\LogWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LogWindow.Designer.cs">
+    <Compile Include="Forms\LogWindow.Designer.cs">
       <DependentUpon>LogWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Main.cs">
+    <Compile Include="Forms\Main.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.Designer.cs">
+    <Compile Include="Forms\Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="Object.cs" />
@@ -94,14 +107,14 @@
     <Compile Include="ProjectSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Level.cs" />
-    <Compile Include="ToolBox.cs">
+    <Compile Include="Forms\ToolBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ToolBox.Designer.cs">
+    <Compile Include="Forms\ToolBox.Designer.cs">
       <DependentUpon>ToolBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Warp.cs" />
-    <EmbeddedResource Include="BackgroundDialog.resx">
+    <EmbeddedResource Include="Forms\BackgroundDialog.resx">
       <DependentUpon>BackgroundDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ObjectControl.resx">
@@ -110,11 +123,17 @@
     <EmbeddedResource Include="Controls\WarpControl.resx">
       <DependentUpon>WarpControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LogWindow.resx">
+    <EmbeddedResource Include="Forms\LevelSettingsDialog.resx">
+      <DependentUpon>LevelSettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LogWindow.resx">
       <DependentUpon>LogWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Main.resx">
+    <EmbeddedResource Include="Forms\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ModelBrowser.resx">
+      <DependentUpon>ModelBrowser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -125,7 +144,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="ToolBox.resx">
+    <EmbeddedResource Include="Forms\ToolBox.resx">
       <DependentUpon>ToolBox.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">

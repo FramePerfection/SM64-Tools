@@ -87,9 +87,7 @@ namespace SM64ModelImporter.F3DParser
                 #endregion
                 #region Pointer
                 case ArgumentType.Pointer:
-                    if (parser.knownReferences.TryGetValue(argString, out identifier)) //Pointer by identifier
-                        argString = argString;
-                    else
+                    if (!parser.knownReferences.TryGetValue(argString, out identifier)) //Pointer by identifier
                     {
                         argString = argString.ToLower();
                         if (argString.StartsWith("0x")) //Immediate Hexadecimal Pointer

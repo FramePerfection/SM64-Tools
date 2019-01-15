@@ -49,11 +49,18 @@
       <DependentUpon>CollisionControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Collision\CollisionMap.cs" />
+    <Compile Include="Collision\CollisionSpecialCommand.cs" />
     <Compile Include="Collision\CollisionTypeControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Collision\CollisionTypeControl.Designer.cs">
       <DependentUpon>CollisionTypeControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collision\SpecialCollisionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Collision\SpecialCollisionDialog.Designer.cs">
+      <DependentUpon>SpecialCollisionDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="DisplayLists\BlenderControl.cs">
       <SubType>UserControl</SubType>
@@ -86,6 +93,14 @@
     <Compile Include="F3DParser\F3DParser.cs" />
     <Compile Include="F3DParser\Function.cs" />
     <Compile Include="FileParser.cs" />
+    <Compile Include="GeoLayout\CommandNode.cs" />
+    <Compile Include="GeoLayout\GeoLayoutCommands.cs" />
+    <Compile Include="GeoLayout\GeoLayoutControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GeoLayout\GeoLayoutControl.Designer.cs">
+      <DependentUpon>GeoLayoutControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="GlobalsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -137,6 +152,9 @@
     <EmbeddedResource Include="Collision\CollisionTypeControl.resx">
       <DependentUpon>CollisionTypeControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Collision\SpecialCollisionDialog.resx">
+      <DependentUpon>SpecialCollisionDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DisplayLists\BlenderControl.resx">
       <DependentUpon>BlenderControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -145,6 +163,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EnumSelectDialog.resx">
       <DependentUpon>EnumSelectDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GeoLayout\GeoLayoutControl.resx">
+      <DependentUpon>GeoLayoutControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GlobalsControl.resx">
       <DependentUpon>GlobalsControl.cs</DependentUpon>

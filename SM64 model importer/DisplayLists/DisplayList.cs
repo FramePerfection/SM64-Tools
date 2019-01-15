@@ -24,7 +24,7 @@ namespace SM64ModelImporter
                                         new Command[] {new Command(0xB9, 0x31D, (int)0x00442078), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)},
                                         null,
                                         null,
-                                        new Command[] {new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)},
+                                        new Command[] {new Command(0xB9, 0x31D, (int)0x00553078), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)},
                                         new Command[] {new Command(0xB9, 0x31D, (int)0x005049D8), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)},
                                         new Command[] {new Command(0xB9, 0x31D, (int)0x00504DD8), new Command(0xFC, 0xFFFFFF, 0xFFFE793C),  new DisplayList.Command(0xBB, 0x0,0)}
         };

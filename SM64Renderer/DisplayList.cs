@@ -46,7 +46,6 @@ namespace SM64Renderer
 
         D3D.VertexBuffer vertexBuffer;
         D3D.Effect usedEffect;
-        Renderer renderer;
         TextureManager texMan;
         List<Subset> subsets = new List<Subset>();
         Vertex[] vertices;
@@ -67,7 +66,6 @@ namespace SM64Renderer
         public void Build(Renderer renderer)
         {
             FinalizeSubset();
-            this.renderer = renderer;
             vertices = new Vertex[vertexAddresses.Count];
             int i = 0;
             foreach (KeyValuePair<int, Vertex> a in vertexAddresses)
@@ -136,6 +134,8 @@ namespace SM64Renderer
             tmpSubset.cmS = Utility.GetBits(w1, 2, 0x8);
             tmpSubset.maskS = Utility.GetBits(w1, 4, 0x4);
             tmpSubset.shiftS = Utility.GetBits(w1, 4, 0);
+            if (w1 >> 0x18 != 0)
+                tmpSubset.texture.segmentedPointer = w1;
         }
 
         public void SetTileSize(long command)
@@ -172,7 +172,8 @@ namespace SM64Renderer
             int w0 = (int)(command >> 0x20);
             int w1 = (int)(command & 0xFFFFFFFF);
             TextureManager.Tile tile = texMan.tiles[tmpLastTile = Utility.GetBits(w1, 3, 0x18)];
-            tmpSubset.texture.segmentedPointer = (int)(command & 0xFFFFFFFF);
+            if (w1 >> 0x18 != 0)
+                tmpSubset.texture.segmentedPointer = w1;
             tmpSubset.texture.fmt = Utility.GetBits(w0, 3, 0x15);
             tmpSubset.texture.bpp = Utility.GetBits(w0, 2, 0x13);
             int a = Utility.GetBits(w0, 0xC, 0);
@@ -189,10 +190,10 @@ namespace SM64Renderer
 
         public void Draw(DX.Matrix transform, int pickValue = 0)
         {
-            D3D.Device device = renderer.device;
-            device.VertexDeclaration = renderer.vtxDeclaration;
+            D3D.Device device = Renderer.current.device;
+            device.VertexDeclaration = Renderer.current.vtxDeclaration;
             device.SetStreamSource(0, vertexBuffer, 0);
-            renderer.SetValues(usedEffect, transform);
+            Renderer.current.SetValues(usedEffect, transform);
             usedEffect.SetValue(Renderer.EffectHandles.PickColor, Renderer.pickIndexToColor(pickValue));
 
             foreach (Subset sub in subsets)
@@ -239,10 +240,18 @@ namespace SM64Renderer
                 string pngFile = materialDirectory + "/" + s.texture.segmentedPointer.ToString("X8") + ".png";
                 if (System.IO.File.Exists(pngFile)) continue;
                 if (s.texture0 != null)
-                D3D.TextureLoader.Save(pngFile, D3D.ImageFileFormat.Png, s.texture0);
+                    D3D.TextureLoader.Save(pngFile, D3D.ImageFileFormat.Png, s.texture0);
                 targetStream.WriteLine("newmtl mtl" + s.texture.segmentedPointer.ToString("X8"));
                 targetStream.WriteLine("map_Kd " + relativeMaterialPath + s.texture.segmentedPointer.ToString("X8") + ".png");
             }
+        }
+
+        public DX.Vector3[] GetVertexPositions()
+        {
+            DX.Vector3[] output = new DX.Vector3[vertices.Length];
+            for (int i = 0; i < output.Length; i++)
+                output[i] = vertices[i].position;
+            return output;
         }
     }
 }

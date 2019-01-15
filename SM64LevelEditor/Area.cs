@@ -12,14 +12,16 @@ namespace SM64LevelEditor
         public GeoLayout geometry;
         List<Object> objects = new List<Object>();
         public bool visible { get; private set; }
-        public List<Object> selectedObjects = new List<Object>();
+        public List<Object> selectedObjects { get; private set; }
         public int collisionPointer { get; private set; }
-       
+        public int musicSequence;
+
         public List<Warp> warps = new List<Warp>();
 
         public Area(Level level, int geoLayoutPointer)
         {
             this.level = level;
+            selectedObjects = new List<Object>();
             geometry = GeoLayout.LoadSegmented(geoLayoutPointer);
         }
 
@@ -37,7 +39,6 @@ namespace SM64LevelEditor
             geometry.MakeInvisible(Level.renderer);
             foreach (Object obj in objects)
                 obj.MakeInvisible();
-
             visible = false;
         }
 
@@ -95,7 +96,16 @@ namespace SM64LevelEditor
         {
             foreach (Object obj in objects)
             {
-                if (!selectedObjects.Contains(obj)) 
+                if (!selectedObjects.Contains(obj))
+                    selectedObjects.Add(obj);
+                obj.selected = true;
+            }
+        }
+        public void SetSelection(Object[] newSelection)
+        {
+            ClearSelection();
+            foreach (Object obj in newSelection)
+            {
                 selectedObjects.Add(obj);
                 obj.selected = true;
             }

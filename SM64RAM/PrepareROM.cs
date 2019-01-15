@@ -18,7 +18,7 @@ namespace SM64RAM
         }
 
         public const int REGULAR_ROM_SIZE = 0x800000;
-        public const int SUGGESTED_ROM_SIZE = 0x3000000;
+        public const int SUGGESTED_ROM_SIZE = 0x4000000;
         const string EXPAND_ROM_MESSAGE = "Loaded ROM is not 64MB. To use the presets that come with this tool, it is suggested that you expand your ROM to 64MB\nAll this will do is increase the file size and add 01 padding in the new areas. Do you want to do that now?";
         public static byte[] Normalize(string inputFile)
         {

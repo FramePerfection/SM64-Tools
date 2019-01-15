@@ -26,7 +26,7 @@ namespace SM64ModelImporter
             while (!reader.EndOfStream)
             {
                 string line = reader.ReadLine();
-                string[] split = line.Split(new char[] {':'}, 2);
+                string[] split = line.Split(new char[] { ':' }, 2);
                 if (split.Length < 2) continue;
                 lst.Add(line);
             }
@@ -34,10 +34,22 @@ namespace SM64ModelImporter
         }
 
         CollisionPatch _patch;
-        public CollisionPatch Patch
+        public CollisionPatch patch
         {
             get { return _patch; }
             set { _patch = value; groupType.Text = _patch.name; cmbType_SelectedTextChanged(null, null); }
+        }
+
+        public bool enableImport
+        {
+            get { return chkEnableImport.Checked; }
+            set { chkEnableImport.Checked = value; }
+        }
+
+        public Image previewImage
+        {
+            get { return picMaterial.BackgroundImage; }
+            set { picMaterial.BackgroundImage = value; }
         }
 
         public CollisionTypeControl()
@@ -62,10 +74,10 @@ namespace SM64ModelImporter
 
         private void cmbType_SelectedTextChanged(object sender, EventArgs e)
         {
-            if (Patch == null) return;
+            if (patch == null) return;
             int type;
             if (cmbType.Text.Length >= 4 && cvt.ParseIntHex(cmbType.Text.Substring(2, 2), out type))
-                Patch.type = (short)type;
+                patch.type = (short)type;
         }
     }
 }

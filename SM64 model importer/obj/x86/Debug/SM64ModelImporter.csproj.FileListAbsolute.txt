@@ -22,3 +22,5 @@ C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model imp
 C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\bin\Debug\SM64 Model Importer.pdb
 C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.Properties.Resources.resources
 C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.EnumSelectDialog.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.SpecialCollisionDialog.resources
+C:\Users\Thomas.Sharkoon7.000\Documents\Hackerino\SM64\SM64 Tools\SM64 model importer\obj\x86\Debug\SM64ModelImporter.GeoLayoutControl.resources

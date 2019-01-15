@@ -29,6 +29,8 @@ namespace SM64Renderer
             public Matrix transform = Matrix.Identity;
             public int pickIndex;
         }
+        public const int NUM_LAYERS = 8;
+
         static Vector3[] bboxVerts = new Vector3[] {new Vector3(-1, -1, -1), new Vector3(1, -1, -1), new Vector3(-1, 1, -1), new Vector3(1, 1, -1),
                                                     new Vector3(-1, -1, 1), new Vector3(1, -1, 1), new Vector3(-1, 1, 1), new Vector3(1, 1, 1)};
         static short[] bboxLineInds = new short[] { 0, 1, 2, 3, 0, 2, 1, 3, 4, 5, 6, 7, 4, 6, 5, 7, 0, 4, 1, 5, 2, 6, 3, 7 };
@@ -40,8 +42,11 @@ namespace SM64Renderer
             new CustomVertex.PositionColored(Vector3.Empty, unchecked((int)0xFF00FF00)), new CustomVertex.PositionColored(new Vector3(0, 1, 0), unchecked((int)0xFF00FF00)),
             new CustomVertex.PositionColored(Vector3.Empty, unchecked((int)0xFFFF0000)), new CustomVertex.PositionColored(new Vector3(0, 0, 1), unchecked((int)0xFFFF0000))};
 
+        public static Renderer current = null;
+
         public Color clearColor = Color.SkyBlue;
-        public List<DisplayListEntry>[] layers = new List<DisplayListEntry>[7];
+        public List<DisplayListEntry>[] layers = new List<DisplayListEntry>[NUM_LAYERS];
+        public bool[] hideLayers = new bool[NUM_LAYERS];
         public DeviceWrapper device;
 
         public Effect defaultEffect, bboxEffect;
@@ -78,15 +83,18 @@ namespace SM64Renderer
 
         public void RenderFrame()
         {
+            current = this;
             viewProjection = view * projection;
             device.device.Clear(ClearFlags.Target | ClearFlags.ZBuffer | ClearFlags.Stencil, clearColor.ToArgb(), 1, 0);
             device.device.BeginScene();
             for (int i = 0; i < layers.Length; i++)
             {
+                if (hideLayers[i]) continue;
                 foreach (DisplayListEntry dl in layers[i])
                     dl.dl.Draw(dl.transform, dl.pickIndex);
             }
             device.device.EndScene();
+            current = null;
         }
 
         public void SetValues(Effect e, Matrix transform)

@@ -11,11 +11,12 @@ namespace SM64RAM
     }
     public class MessageBoxStream : MessageStream
     {
+        public bool showWarnings = false;
         public void AppendMessage(string message, string type)
         {
             if (type == "Error")
                 System.Windows.Forms.MessageBox.Show(message, type, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else
+            else if (showWarnings || type != "Warning")
                 System.Windows.Forms.MessageBox.Show(message, type);
         }
     }

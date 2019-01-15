@@ -30,16 +30,17 @@ namespace SM64ModelImporter
                     areaCollision[currentArea] = LevelScriptReader.cursorPosition;
                 return true;
             });
-            EmulationState.instance.BankLoaded += (int bank) => {
+            EmulationState.instance.BankLoaded += (int bank) =>
+            {
                 if (bank == 0x19)
-                    areaCollision.Clear(); 
+                    areaCollision.Clear();
             };
         }
 
         public CollisionControl()
         {
             InitializeComponent();
-            cmbTypeStyle.SelectedIndex = 0;
+            cmbTypeStyle.SelectedIndex = 1;
             LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.END_OF_LEVEL_LAYOUT].Add(UpdateSpecialPointers);
             UpdateSpecialPointers(null);
         }
@@ -49,7 +50,7 @@ namespace SM64ModelImporter
             AreaCollisionPointer[] arr = new AreaCollisionPointer[areaCollision.Count];
             int i = 0;
             foreach (KeyValuePair<byte, int> ack in areaCollision)
-                arr[i] = new AreaCollisionPointer(ack.Key, ack.Value);
+                arr[i++] = new AreaCollisionPointer(ack.Key, ack.Value);
             specialPointerControl1.SetPointerSource(arr);
             return true;
         }
@@ -63,11 +64,29 @@ namespace SM64ModelImporter
             LoadFile();
         }
 
+        private void cmbTypeStyle_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadFile();
+        }
+
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            base.OnHandleDestroyed(e);
+            LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.END_OF_LEVEL_LAYOUT].Remove(UpdateSpecialPointers);
+        }
+
+        private void btnSpecialCollision_Click(object sender, EventArgs e)
+        {
+            SpecialCollisionDialog dlg = new SpecialCollisionDialog(collision.specialBoxes);
+            if (dlg.ShowDialog() != DialogResult.OK) return;
+            collision.specialBoxes = dlg.cmd;
+        }
+
         public int PrepareForImport()
         {
             try
             {
-                FileParser.Block  old_settings = new FileParser.Block(this); //Restore settings for collision after loading
+                FileParser.Block old_settings = new FileParser.Block(this); //Restore settings for collision after loading
                 LoadFile();
                 LoadSettings(old_settings);
             }
@@ -80,6 +99,12 @@ namespace SM64ModelImporter
 
         public int Import(int segmentOffset)
         {
+            foreach (Control ctrl in panelCollisionTypes.Controls)
+            {
+                CollisionTypeControl patchControl = ctrl as CollisionTypeControl;
+                if (patchControl != null && !patchControl.enableImport)
+                    collision.patches.Remove(patchControl.patch);
+            }
             int totalSize = collision.GetLength();
             this.segmentOffset = segmentOffset;
             int segment = segmentOffset >> 0x18;
@@ -116,7 +141,9 @@ namespace SM64ModelImporter
                 ctrl.Location = new Point(panelCollisionTypes.Margin.Left, panelCollisionTypes.Margin.Top + y);
                 ctrl.Width = panelCollisionTypes.Width - panelCollisionTypes.Margin.Horizontal;
                 ctrl.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-                ctrl.Patch = patch;
+                ctrl.patch = patch;
+                if (cmbTypeStyle.SelectedIndex == 1) //By Material
+                    ctrl.previewImage = patch.materialImage;
                 y += ctrl.Size.Height + ctrl.Margin.Top + ctrl.Margin.Bottom;
                 panelCollisionTypes.Controls.Add(ctrl);
             }
@@ -149,8 +176,38 @@ namespace SM64ModelImporter
             block.SetString("Obj File", sourceFileName);
             block.SetInt("Type Style", cmbTypeStyle.SelectedIndex, false);
 
-            foreach (CollisionPatch patch in collision.patches)
-                block.SetInt(patch.name, patch.type);
+            foreach (Control control in panelCollisionTypes.Controls)
+            {
+                CollisionTypeControl c = control as CollisionTypeControl;
+                if (c != null)
+                {
+                    block.SetInt(c.patch.name, c.patch.type);
+                    block.SetBool(c.patch.name + " enabled", c.enableImport);
+                }
+            }
+
+            if (collision.specialBoxes != null)
+            {
+                int num = collision.specialBoxes.boxes.Count;
+                int[] type = new int[num], x1 = new int[num], x2 = new int[num], z1 = new int[num], z2 = new int[num], y = new int[num];
+                int i = 0;
+                foreach (SpecialCollisionBox box in collision.specialBoxes.boxes)
+                {
+                    type[i] = box.type;
+                    x1[i] = box.x1;
+                    x2[i] = box.x2;
+                    z1[i] = box.z1;
+                    z2[i] = box.z2;
+                    y[i] = box.y;
+                    i++;
+                }
+                block.SetIntArray("Special Boxes", type, true);
+                block.SetIntArray("Special Boxes X1", x1, false);
+                block.SetIntArray("Special Boxes X2", x2, false);
+                block.SetIntArray("Special Boxes Z1", z1, false);
+                block.SetIntArray("Special Boxes Z2", z2, false);
+                block.SetIntArray("Special Boxes Height", y, false);
+            }
         }
 
         public void LoadSettings(FileParser.Block block)
@@ -185,21 +242,34 @@ namespace SM64ModelImporter
             foreach (Control control in panelCollisionTypes.Controls)
             {
                 CollisionTypeControl c = control as CollisionTypeControl;
-                if (c != null) c.SetType(block.GetInt(c.Patch.name, false));
+                if (c != null)
+                {
+                    c.SetType(block.GetInt(c.patch.name, false));
+                    c.enableImport = block.GetBool(c.patch.name + " enabled", false);
+                }
+            }
+
+            int[] specialBoxTypes = block.GetIntArray("Special Boxes", false);
+            int[] specialBoxX1 = block.GetIntArray("Special Boxes X1", false);
+            int[] specialBoxX2 = block.GetIntArray("Special Boxes X2", false);
+            int[] specialBoxZ1 = block.GetIntArray("Special Boxes Z1", false);
+            int[] specialBoxZ2 = block.GetIntArray("Special Boxes Z2", false);
+            int[] specialBoxY = block.GetIntArray("Special Boxes Height", false);
+            if (specialBoxTypes.Length > 0)
+                collision.specialBoxes = new SpecialBoxes();
+            for (int i = 0; i < specialBoxTypes.Length; i++)
+            {
+                SpecialCollisionBox box = new SpecialCollisionBox();
+                box.type = (short)specialBoxTypes[i];
+                if (i < specialBoxX1.Length) box.x1 = (short)specialBoxX1[i];
+                if (i < specialBoxX2.Length) box.x2 = (short)specialBoxX2[i];
+                if (i < specialBoxZ1.Length) box.z1 = (short)specialBoxZ1[i];
+                if (i < specialBoxZ2.Length) box.z2 = (short)specialBoxZ2[i];
+                if (i < specialBoxY.Length) box.y = (short)specialBoxY[i];
+                collision.specialBoxes.boxes.Add(box);
             }
         }
 
         #endregion
-
-        private void cmbTypeStyle_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            LoadFile();
-        }
-
-        protected override void OnHandleDestroyed(EventArgs e)
-        {
-            base.OnHandleDestroyed(e);
-            LevelScriptReader.executors[(byte)LEVEL_SCRIPT_COMMANDS.END_OF_LEVEL_LAYOUT].Remove(UpdateSpecialPointers);
-        }
     }
 }

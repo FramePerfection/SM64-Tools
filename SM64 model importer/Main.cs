@@ -28,6 +28,7 @@ namespace SM64ModelImporter
 
         List<DisplayListControl> displayLists = new List<DisplayListControl>();
         List<CollisionControl> collisionMaps = new List<CollisionControl>();
+        List<GeoLayoutControl> geoLayouts = new List<GeoLayoutControl>();
         List<int> runLevelScripts = new List<int>();
         int segmentedAddress = 0x0e000000;
 
@@ -42,7 +43,6 @@ namespace SM64ModelImporter
         {
             instance = this;
             InitializeComponent();
-            FormClosing += main_Close;
             EmulationState.instance.ROMLoaded += () => CheckImportValid();
             RAMControl.RunLevelScriptFinished += (int address) =>
             {
@@ -62,11 +62,6 @@ namespace SM64ModelImporter
         }
 
         #region GUI Events
-
-        private void main_Close(object sender, FormClosingEventArgs e)
-        {
-            LevelScriptReader.SaveLog("log.txt");
-        }
 
         private void btnImport_Click(object sender, EventArgs e)
         {
@@ -121,6 +116,7 @@ namespace SM64ModelImporter
                     }
                 }
             File.WriteAllBytes(EmulationState.instance.ROMName, EmulationState.instance.ROM);
+            PatchEngine.RecalculateChecksum();
             EmulationState.messages.AppendMessage("Imported " + numObjects + " objects.", "Info");
         }
 
@@ -132,6 +128,10 @@ namespace SM64ModelImporter
         private void btnAddCollision_Click(object sender, EventArgs e)
         {
             AddCollision(new CollisionControl());
+        }
+        private void btnAddGeoLayout_Click(object sender, EventArgs e)
+        {
+            AddGeoLayout(new GeoLayoutControl());
         }
 
         private void txtBaseOffset_TextChanged(object sender, EventArgs e)
@@ -190,12 +190,17 @@ namespace SM64ModelImporter
             AddTabPage(ctrl, "Display List");
             displayLists.Add(ctrl);
         }
-
         void AddCollision(CollisionControl ctrl)
         {
             AddTabPage(ctrl, "Collision");
             collisionMaps.Add(ctrl);
         }
+        void AddGeoLayout(GeoLayoutControl ctrl)
+        {
+            AddTabPage(ctrl, "Geo Layout");
+            geoLayouts.Add(ctrl);
+        }
+
         public void RemoveDisplayList(DisplayListControl ctrl, TabPage page)
         {
             if (ctrl == null) return;
@@ -314,6 +319,11 @@ namespace SM64ModelImporter
         private void numScale_ValueChanged(object sender, EventArgs e)
         {
             Settings.importScale = (float)numScale.Value;
+        }
+
+        private void globalsControl_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

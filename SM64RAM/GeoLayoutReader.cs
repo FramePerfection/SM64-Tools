@@ -108,7 +108,14 @@ namespace SM64RAM
         {
             if (!EmulationState.instance.AssertRead(segmentedAddress, 4)) return;
             cursor = segmentedAddress & 0xFFFFFF;
-            ReadAmount(EmulationState.instance.banks[segmentedAddress >> 0x18].value);
+            try
+            {
+                ReadAmount(EmulationState.instance.banks[segmentedAddress >> 0x18].value);
+            }
+            catch (Exception ex)
+            {
+                ;
+            }
         }
 
         static void ReadAmount(byte[] currentBank, int amount = -1)
@@ -122,8 +129,7 @@ namespace SM64RAM
                     cmd = currentBank[cursor];
                 if (!commandLength.TryGetValue(cmd, out cmdLen))
                 {
-                    MessageBox.Show("Encountered unknown command 0x" + cmd.ToString("X") + " at 0x" + cursor.ToString("X") + " and cannot derive length!"
-                        , "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    EmulationState.messages.AppendMessage("Encountered unknown command 0x" + cmd.ToString("X") + " at 0x" + cursor.ToString("X") + " and cannot derive length!", "Error");
                     return;
                 }
                 if (cmd == 0xA && currentBank[cursor + 1] != 0) cmdLen += 4;

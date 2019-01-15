@@ -16,7 +16,6 @@ namespace SM64ModelImporter
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             byte[] arr = new byte[100];
-            F3DParser.F3DParser p = new F3DParser.F3DParser("test.txt", 20, arr);
             Application.Run(new Main());
         }
     }

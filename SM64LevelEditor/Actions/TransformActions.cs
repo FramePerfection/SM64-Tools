@@ -148,7 +148,7 @@ namespace SM64LevelEditor
         public override void Update()
         {
             base.Update();
-            displacement += new Vector3(1, 1, 1) * Main.mouseDelta.X * -10 * Editor.mouseSensitivity * speedMultiplier;
+            displacement += new Vector3(1, 1, 1) * Main.mouseDelta.X * -0.1f * Editor.mouseSensitivity * speedMultiplier;
             Vector3 limitedDisplacement = displacement;
             if ((actionAxis & 1) == 0) limitedDisplacement.X = 0;
             if ((actionAxis & 2) == 0) limitedDisplacement.Y = 0;

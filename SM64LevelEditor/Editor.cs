@@ -13,23 +13,16 @@ namespace SM64LevelEditor
         public static int currentAreaIndex
         {
             get { return _currentAreaIndex; }
-            set
-            {
-                if (currentArea != null)
-                    currentArea.MakeInvisible();
-                _currentAreaIndex = value;
-                if (currentArea != null)
-                    currentArea.MakeVisible();
-            }
+            set            {                currentLevel.MakeVisible(_currentAreaIndex = value);            }
         }
         public static Area currentArea { get { return currentLevel == null || currentAreaIndex < 0 ? null : currentLevel.areas[currentAreaIndex]; } }
         public static Camera camera = new Camera();
 
         public static float mouseSensitivity = 3;
-        private static Stack<Action> undoHistory = new Stack<Action>();
-        private static Action currentAction;
         public static bool allowSelect { get { return currentAction == null; } }
         public static ProjectSettings projectSettings;
+        private static Stack<Action> undoHistory = new Stack<Action>();
+        private static Action currentAction;
 
         static Dictionary<ActionKeyAttribute, ConstructorInfo> availableActions = new Dictionary<ActionKeyAttribute, ConstructorInfo>();
         static List<ActionKeyAttribute> possibleActions = new List<ActionKeyAttribute>();
@@ -109,6 +102,12 @@ namespace SM64LevelEditor
         {
             if (currentAction != null) currentAction.Undo();
             currentAction = newAction;
+        }
+
+        public static void Undo()
+        {
+            if (undoHistory.Count > 0)
+                undoHistory.Pop().Undo();
         }
 
         static void ResetActionSelect()

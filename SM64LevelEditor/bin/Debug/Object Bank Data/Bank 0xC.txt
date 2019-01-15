@@ -1,0 +1,56 @@
+;Bank 0xC
+
+[Haunted Objects]
+List = Bookend|Haunted Chair|Small Key|Mad Piano|Boo|Haunted Cage
+cmd17 = 18 0C 00 05 00 16 6C 60 00 16 D5 C0|17 0C 00 0C 00 16 D5 C0 00 16 D8 70
+cmd06 = 06 08 00 00 15 00 08 4C
+
+[Snow Objects]
+List = Spindrift|Penguin|Mr. Blizzard
+cmd17 = 18 0C 00 05 00 16 06 70 00 16 56 E0|17 0C 00 0C 00 16 56 E0 00 16 5A 50
+cmd06 = 06 08 00 00 15 00 08 0C
+
+[Assorted Enemies (1)]
+List = Monty Mole|Ukiki Monkey|Fwoosh
+cmd17 = 18 0C 00 05 00 15 21 D0 00 16 02 E0|17 0C 00 0C 00 16 02 E0 00 16 06 70
+cmd06 = 06 08 00 00 15 00 07 E8
+
+[Desert Objects]
+List = Klepto|Eyerock|Pokey
+cmd17 = 18 0C 00 05 00 14 5E 90 00 15 1B 70|17 0C 00 0C 00 15 1B 70 00 15 21 D0
+cmd06 = 06 08 00 00 15 00 07 B4
+
+[Big Bob-Omb Boss]
+List = Big Bob-Omb|Water Bubble
+cmd17 = 18 0C 00 05 00 13 4D 20 00 13 B5 D0|17 0C 00 0C 00 13 B5 D0 00 13 B9 10
+cmd06 = 06 08 00 00 15 00 07 6C
+
+[Assorted Enemies (2)]
+List = Yellow Sphere|Hoot the Owl|Yoshi Egg|Thwomp|Bullet Bill|Heave-Ho
+cmd17 = 18 0C 00 05 00 12 A7 E0 00 13 28 50|17 0C 00 0C 00 13 28 50 00 13 2C 60
+cmd06 = 06 08 00 00 15 00 07 1C
+
+[Water Objects]
+List = Clam|Shark|Unagi
+cmd17 = 18 0C 00 05 00 13 B9 10 00 14 5C 10|17 0C 00 0C 00 14 5C 10 00 14 5E 90
+cmd06 = 06 08 00 00 15 00 07 88
+
+[Assorted Enemies (3)]
+List = Bubba|Wiggler|Lakitu|Spinny Ball|Spinny
+cmd17 = 18 0C 00 05 00 18 0B B0 00 18 7F A0|17 0C 00 0C 00 18 7F A0 00 18 84 40
+cmd06 = 06 08 00 00 15 00 08 A4
+
+[Peach & Yoshi]
+List = Birds|Peach|Yoshi
+cmd17 = 18 0C 00 05 00 16 D8 70 00 18 05 40|17 0C 00 0C 00 18 05 40 00 18 0B B0
+cmd06 = 06 08 00 00 15 00 08 88
+
+[Switches]
+List = Beta Trampoline|Cap Switches
+cmd17 = 18 0C 00 05 00 16 5A 50 00 16 6B D0|17 0C 00 0C 00 16 6B D0 00 16 6C 60
+cmd06 = 06 08 00 00 15 00 08 30
+
+[Lava Objects]
+List = Small Bully|Big Bully|Beta Blargg
+cmd17 = 18 0C 00 05 00 13 2C 60 00 13 4A 70|17 0C 00 0C 00 13 4A 70 00 13 4D 20
+cmd06 = 06 08 00 00 15 00 07 50

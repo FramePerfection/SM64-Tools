@@ -32,6 +32,7 @@
             this.tabImports = new System.Windows.Forms.TabControl();
             this.tabPagePlus = new System.Windows.Forms.TabPage();
             this.globalsControl = new SM64ModelImporter.GlobalsControl();
+            this.btnAddGeoLayout = new System.Windows.Forms.Button();
             this.btnAddCollision = new System.Windows.Forms.Button();
             this.btnAddDisplayList = new System.Windows.Forms.Button();
             this.btnSaveSettings = new System.Windows.Forms.Button();
@@ -74,6 +75,7 @@
             // tabPagePlus
             // 
             this.tabPagePlus.Controls.Add(this.globalsControl);
+            this.tabPagePlus.Controls.Add(this.btnAddGeoLayout);
             this.tabPagePlus.Controls.Add(this.btnAddCollision);
             this.tabPagePlus.Controls.Add(this.btnAddDisplayList);
             this.tabPagePlus.Location = new System.Drawing.Point(4, 22);
@@ -88,17 +90,31 @@
             this.globalsControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.globalsControl.Location = new System.Drawing.Point(3, 195);
+            this.globalsControl.Location = new System.Drawing.Point(6, 195);
             this.globalsControl.Name = "globalsControl";
-            this.globalsControl.Size = new System.Drawing.Size(675, 349);
+            this.globalsControl.Size = new System.Drawing.Size(675, 253);
             this.globalsControl.TabIndex = 1;
+            // 
+            // btnAddGeoLayout
+            // 
+            this.btnAddGeoLayout.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAddGeoLayout.Enabled = false;
+            this.btnAddGeoLayout.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddGeoLayout.Location = new System.Drawing.Point(3, 195);
+            this.btnAddGeoLayout.Name = "btnAddGeoLayout";
+            this.btnAddGeoLayout.Size = new System.Drawing.Size(678, 90);
+            this.btnAddGeoLayout.TabIndex = 0;
+            this.btnAddGeoLayout.Text = "New Geo Layout";
+            this.btnAddGeoLayout.UseVisualStyleBackColor = true;
+            this.btnAddGeoLayout.Click += new System.EventHandler(this.btnAddGeoLayout_Click);
             // 
             // btnAddCollision
             // 
             this.btnAddCollision.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAddCollision.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAddCollision.Location = new System.Drawing.Point(0, 99);
+            this.btnAddCollision.Location = new System.Drawing.Point(3, 99);
             this.btnAddCollision.Name = "btnAddCollision";
             this.btnAddCollision.Size = new System.Drawing.Size(678, 90);
             this.btnAddCollision.TabIndex = 0;
@@ -248,6 +264,7 @@
         private System.Windows.Forms.NumericUpDown numScale;
         private System.Windows.Forms.Label label1;
         public GlobalsControl globalsControl;
+        private System.Windows.Forms.Button btnAddGeoLayout;
     }
 }
 

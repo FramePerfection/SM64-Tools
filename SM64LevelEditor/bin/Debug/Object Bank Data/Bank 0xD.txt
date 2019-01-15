@@ -1,0 +1,31 @@
+;Bank 0xD
+
+[Assorted Enemies (4)]
+List = Mr. I|Bat (Swoop)|Snufit|Dorrie|Scuttlebug
+cmd17 = 18 0C 00 06 00 1E 7E E0 00 1F 1B 30|17 0C 00 0D 00 1F 1B 30 00 1F 22 00
+cmd06 = 06 08 00 00 15 00 09 DC
+
+[Moneybags]
+List = Moneybags
+cmd17 = 18 0C 00 06 00 1E 51 F0 00 1E 7D 90|17 0C 00 0D 00 1E 7D 90 00 1E 7E E0
+cmd06 = 06 08 00 00 15 00 09 C0
+
+[Castle Objects]
+List = Lakitu|Toads|MIPS the rabbit|Boo
+cmd17 = 18 0C 00 06 00 1D 83 10 00 1E 4B F0|17 0C 00 0D 00 1E 4B F0 00 1E 51 F0
+cmd06 = 06 08 00 00 15 00 09 9C
+
+[Ground Enemies]
+List = Koopa Flag|Wooden Log|Koopa-the-Quick|Koopa|Piranha Plant|Whomp|Metalic Ball|Chain Chomp
+cmd17 = 18 0C 00 06 00 1C 42 30 00 1D 7C 90|17 0C 00 0D 00 1D 7C 90 00 1D 83 10
+cmd06 = 06 08 00 00 15 00 09 58
+
+[Water Objects (2)]
+List = Skeeter|Bowser Bomb|Fish|Chirp Chirp|Manta Ring|Treasure Chest
+cmd17 = 18 0C 00 06 00 1B 9C C0 00 1C 3D B0|17 0C 00 0D 00 1C 3D B0 00 1C 42 30
+cmd06 = 06 08 00 00 15 00 09 14
+
+[Bowser]
+List = Bowser Flames|Yellow Sphere (Bowser 1)|Bowser|Bowser 2|Bowser Bomb|Bowser Clouds
+cmd17 = 18 0C 00 06 00 18 84 40 00 1B 90 70|17 0C 00 0D 00 1B 90 70 00 1B 9C C0
+cmd06 = 06 08 00 00 15 00 08 D8
